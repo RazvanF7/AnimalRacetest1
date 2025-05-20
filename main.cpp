@@ -125,7 +125,7 @@ int Animal::calcPret() const {
     int i = 0;
     int pretTotal = 0;
     pretTotal += extraPret();
-    for (auto av : avantaj) {
+    for ([[maybe_unused]] const auto &av : avantaj) {
         i++;
     }
     pretTotal += i*100+ nivel*100;
@@ -192,7 +192,7 @@ int Animal::calculeazaPerf(const int x, const int y) {
     int i = 0;
     int perf = initPerf;
     perf += extraPerf();
-    for (auto av : avantaj) {
+    for ([[maybe_unused]] const auto &av : avantaj) {
         i++;
     }
     perf += i*100 + nivel*100;
@@ -748,7 +748,7 @@ void Meniu::afisOptiuni() {
               << "4. inventar jucator\n"
               << "5) antreneaza animal\n"
               << "0) stop\n"
-              << "alege optiunea: ";
+              << "alege optiunea: "<<std::endl;
 }
 
 void Meniu::comandaAdaugaMagazin() {
