@@ -171,11 +171,9 @@ bool operator==(const Animal& a, const Animal& b) {
 void Animal::odihna() {
     if (energie>80) {
         throw EnergieMulta();
-
     }
     energie+=20;
     std::cout<<"Animalul s-a odihnit. Energie actuala: "<<energie<<std::endl;
-
 }
 
 
@@ -283,22 +281,22 @@ void Cal::afis(std::ostream& os) const {
 }
 
 int Cal::extraPret() const {
-    int pret = 0;
+    int pretloc = 0;
     if (raritate == "Epic")
-        pret += 300;
+        pretloc += 300;
     else if (raritate == "Legendar")
-        pret += 700;
+        pretloc += 700;
     else
-        pret += 100;
+        pretloc += 100;
 
     if (copiteCustom) {
-        pret *= 2;
+        pretloc *= 2;
     }
-    pret += anduranta/2;
-    pret += viteza/3;
+    pretloc += anduranta/2;
+    pretloc += viteza/3;
     if (varsta > 10)
-        pret -= 400;
-    return pret;
+        pretloc -= 400;
+    return pretloc;
 }
 
 bool Cal::operator<(const Cal& other) const {
