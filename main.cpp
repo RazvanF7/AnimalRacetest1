@@ -402,22 +402,22 @@ void Caine::afis(std::ostream& os) const {
 }
 
 int Caine::extraPret() const {
-    int pret = 0;
+    int pretloc = 0;
     if (rasa == "Husky")
-        pret += 300;
+        pretloc += 300;
     else if (rasa == "Ogar")
-        pret += 700;
+        pretloc += 700;
     else
-        pret += 200;
+        pretloc += 200;
 
     if (sanie) {
-        pret *= 2;
+        pretloc *= 2;
     }
-    pret += loialitate/2;
-    pret += agilitate/2;
+    pretloc += loialitate/2;
+    pretloc += agilitate/2;
     if (varsta > 6)
-        pret -= 400;
-    return pret;
+        pretloc -= 400;
+    return pretloc;
 }
 int Caine::extraPerf() const {
     int perf = 0;
