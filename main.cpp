@@ -5,6 +5,7 @@
 #include <vector>
 #include <exception>
 #include <algorithm>
+#include <map>
 
 class RaritateInvalida: public std::exception {
     public:
@@ -43,21 +44,22 @@ class Animal {
     const int id;
     static int nextId;
     std::string nume;
-    std::set<std::string> avantaj;
+    std::string avantaj;
     int initPerf;
     int pret;
-    int nivel;
+
 protected:
+    int nivel;
     virtual void afis(std::ostream&) const{}
     [[nodiscard]] virtual int extraPret() const;
-    int varsta;
+    int participari;
     int energie;
     [[nodiscard]] int getInitPerf() const;
     [[nodiscard]] virtual int extraPerf() const;
 
 public:
     Animal();
-    Animal(std::string  nume, int varsta, const std::set<std::string> &av, int nivel);
+    Animal(std::string  nume, int participari, std::string av, int nivel);
     Animal(const Animal& other) = default;
 
     Animal& operator=(const Animal& other);
@@ -79,30 +81,40 @@ public:
     [[nodiscard]] virtual std::shared_ptr<Animal> clone() const = 0;
 
     Animal& operator++();
-    Animal& operator+=(const std::string& adv);
+
 
     friend bool operator<(const Animal& a, const Animal& b);
+
     friend bool operator==(const Animal& a, const Animal& b);
+
     [[nodiscard]] int getId() const;
-    virtual void antrenamentANTR();
-    virtual int calculeazaPerf(int x, int y);
+
+    virtual void antrenamentANTR() = 0;
+
+    virtual int calculeazaPerf();
+
+    virtual int actiuneSpeciala() = 0;
+
+    [[nodiscard]] std::string getAvantaj() const;
+
+    [[nodiscard]] int getParticipari() const;
 };
 int Animal::nextId = 0;
 Animal::Animal():id(++nextId), nume("unknown"), avantaj({"unknown"}),
                     initPerf(100), pret(0), nivel(1),
-                  varsta(1), energie(100) {
+                  participari(0), energie(100) {
 }
 
-Animal::Animal(std::string nume, int varsta, const std::set<std::string> &av, int nivel) :
-id(++nextId),nume(std::move(nume)), avantaj(av), initPerf(100),
-pret(0), nivel(nivel), varsta(varsta), energie(100) {
+Animal::Animal(std::string nume, int participari, std::string av, int nivel) :
+id(++nextId),nume(std::move(nume)), avantaj(std::move(av)), initPerf(100),
+pret(0), nivel(nivel), participari(participari), energie(100) {
 }
 
 
 Animal &Animal::operator=(const Animal &other) {
     if (this != &other) {
         nume = other.nume;
-        varsta = other.varsta;
+        participari = other.participari;
         avantaj = other.avantaj;
         initPerf = other.initPerf;
         nivel = other.nivel;
@@ -114,7 +126,7 @@ Animal &Animal::operator=(const Animal &other) {
 }
 
 Animal &Animal::operator++(int) {
-    varsta++;
+    participari++;
     return *this;
 }
 int Animal::extraPret() const {
@@ -134,7 +146,7 @@ int Animal::calcPret() const {
 
 std::ostream& operator<<(std::ostream& os, const Animal& animal) {
     os<<"nume: "<<animal.nume<<std::endl
-    <<"varsta: "<<animal.varsta<<std::endl
+    <<"participari: "<<animal.participari<<std::endl
     <<"pret: "<<animal.calcPret()<<std::endl
     <<"energie: "<<animal.energie<<std::endl
     <<"nivel: "<<animal.nivel<<std::endl
@@ -158,10 +170,6 @@ Animal &Animal::operator++() {
         return *this;
     }
 
-Animal& Animal::operator+=(const std::string& adv) {
-    avantaj.insert(adv);
-    return *this;
-}
 bool operator<(const Animal& a, const Animal& b) {
     return a.calcPret() < b.calcPret();
 }
@@ -181,22 +189,14 @@ int Animal::getId() const {
     return id;
 }
 
-void Animal::antrenamentANTR() {
-    nivel++;
-}
 int Animal::getInitPerf() const {
     return initPerf;
 }
 
-int Animal::calculeazaPerf(const int x, const int y) {
-    int i = 0;
+int Animal::calculeazaPerf() {
     int perf = initPerf;
     perf += extraPerf();
-    for ([[maybe_unused]] const auto &av : avantaj) {
-        i++;
-    }
-    perf += i*100 + nivel*100;
-    perf += x * 2 + y*3;
+    perf += nivel*100;
     return perf;
 }
 
@@ -204,6 +204,13 @@ int Animal::extraPerf() const{
     return 0;
 }
 
+std::string Animal::getAvantaj() const {
+    return avantaj;
+}
+
+int Animal::getParticipari() const {
+    return participari;
+}
 
 //      Clasa Cal
 
@@ -219,13 +226,15 @@ protected:
     [[nodiscard]] int extraPerf() const override;
 
 public:
-    Cal(const std::string &nume, int varsta, const std::set<std::string> &av, int nivel, int anduranta,int viteza,const std::string &raritate);
+    Cal(bool copiteCustom,const std::string &nume, int participari, const std::string &av, int nivel, int anduranta,int viteza,const std::string &raritate);
     static bool eRaritateValida(const std::string &raritate);
     void antreneaza() override;
     void odihna()override;
     void upgradeCopite();
     [[nodiscard]] std::shared_ptr<Animal> clone() const override;
     bool operator<(const Cal& other) const;
+    void antrenamentANTR() override;
+    int actiuneSpeciala() override;
 
 };
 
@@ -235,10 +244,10 @@ const std::set<std::string> Cal::raritati = {"Normal", "Epic", "Legendar"};
 bool Cal::eRaritateValida(const std::string &raritate) {
     return raritati.find(raritate) != raritati.end();
 }
-Cal::Cal(const std::string &nume, int varsta, const std::set<std::string> &av,
+Cal::Cal(bool copiteCustom, const std::string &nume, int participari, const std::string &av,
     int nivel,int anduranta,int viteza, const std::string &raritate):
-Animal(nume, varsta, av, nivel),
-copiteCustom(false),anduranta(anduranta),viteza(viteza),raritate(raritate)
+Animal(nume, participari, av, nivel),
+copiteCustom(copiteCustom),anduranta(anduranta),viteza(viteza),raritate(raritate)
 {
     if (!eRaritateValida(raritate)) {
         throw RaritateInvalida();
@@ -268,7 +277,7 @@ void Cal::odihna() {
     std::cout<<"Calul s-a odihnit. Energie actuala: "<<energie<<std::endl;
 }
 void Cal::afis(std::ostream& os) const {
-    os<<"Copite speciale: ";
+    os<<"copite speciale: ";
     if(copiteCustom) {
         os<<"da "<<std::endl;
     }
@@ -294,7 +303,7 @@ int Cal::extraPret() const {
     }
     pretloc += anduranta/2;
     pretloc += viteza/3;
-    if (varsta > 10)
+    if (participari > 10)
         pretloc -= 400;
     return pretloc;
 }
@@ -317,7 +326,7 @@ int Cal::extraPerf() const {
     }
     perf += anduranta/2;
     perf += viteza/3;
-    if (varsta > 10)
+    if (participari > 10)
         perf -= 500;
     return perf;
 }
@@ -326,13 +335,68 @@ std::shared_ptr<Animal> Cal::clone() const {
     return std::make_shared<Cal>(*this);
 }
 
+
+void Cal::antrenamentANTR() {
+    anduranta+=20;
+    viteza+=20;
+    nivel++;
+}
+
+int Cal::actiuneSpeciala() {
+    int banispec = 0;
+    if (energie<10) {
+        throw EnergiePutina();
+    }
+    else {
+        banispec = (anduranta+viteza)/2;
+        if (copiteCustom) {
+            banispec *= 2;
+        }
+        energie-=10;
+    }
+    return banispec;
+}
+
+
+class CalFactory {
+public:
+    static std::shared_ptr<Animal> createCalStart(const std::string &nume, int participari, const std::string &av,
+        int nivel, int anduranta,int viteza, const std::string &raritate);
+    static std::shared_ptr<Animal> createCalMid(const std::string &nume, int participari, const std::string &av,
+    int nivel, int anduranta,int viteza, const std::string &raritate);
+    static std::shared_ptr<Animal> createCalEnd(const std::string &nume, int participari, const std::string &av,
+    int nivel, int anduranta,int viteza, const std::string &raritate);
+
+};
+
+std::shared_ptr<Animal> CalFactory::createCalStart(const std::string &nume,
+    int participari,const std::string &av, int nivel, int anduranta,
+    int viteza, const std::string &raritate) {
+    return std::make_shared<Cal>(false,nume,1,"viteza",1,100,100,"Normal");
+
+}
+
+std::shared_ptr<Animal> CalFactory::createCalMid(const std::string &nume,
+    int participari,const std::string &av, int nivel, int anduranta,
+    int viteza, const std::string &raritate) {
+    return std::make_shared<Cal>(false,nume,1,"agilitate",3,200,200,"Epic");
+
+}
+
+std::shared_ptr<Animal> CalFactory::createCalEnd(const std::string &nume,
+    int participari,const std::string &av, int nivel, int anduranta,
+    int viteza, const std::string &raritate) {
+    return std::make_shared<Cal>(true,nume,1,"control",5,300,300,"Legendar");
+
+}
+
+
+
+
 // Clasa Caine
 
 
-
-
 class Caine: public Animal {
-    bool sanie;
     int loialitate;
     int agilitate;
     std::string rasa;
@@ -343,29 +407,31 @@ protected:
     [[nodiscard]] int extraPerf() const override;
 
 public:
-    Caine(const std::string &nume, int varsta, const std::set<std::string> &av, int nivel, int loialitate,int agilitate,const std::string &rasa);
+    Caine(const std::string &nume, int participari, const std::string &av, int nivel, int loialitate,int agilitate,const std::string &rasa);
     static bool eRasaValida(const std::string &rasa);
     void antreneaza() override;
     void odihna()override;
-    void upgradeSanie();
     bool operator<(const Caine& other) const;
     [[nodiscard]] std::shared_ptr<Animal> clone() const override;
+    void antrenamentANTR() override;
+
+    int actiuneSpeciala() override;
 };
 
 const std::set<std::string> Caine::rase = {"Husky", "Ogar", "Dalmatian"};
 bool Caine::eRasaValida(const std::string &rasa) {
     return rase.find(rasa) != rase.end();
 }
-Caine::Caine(const std::string &nume, int varsta, const std::set<std::string> &av,
+Caine::Caine(const std::string &nume, int participari, const std::string &av,
     int nivel, int loialitate, int agilitate, const std::string &rasa):
-Animal(nume, varsta, av, nivel),
-sanie(false),loialitate(loialitate),agilitate(agilitate),rasa(rasa)
+Animal(nume, participari, av, nivel),loialitate(loialitate),agilitate(agilitate),rasa(rasa)
 {
     if (!eRasaValida(rasa)) {
         throw RasaInvalida();
     }
 
 }
+
 void Caine::antreneaza() {
     if (energie<20) {
         throw EnergiePutina();
@@ -376,9 +442,6 @@ void Caine::antreneaza() {
     agilitate+=20;
     std::cout<<"Antrenament finalizat. Energie ramasa: "<<energie<<std::endl;
 }
-void Caine::upgradeSanie() {
-    sanie=true;
-}
 void Caine::odihna() {
     if (energie>80) {
         throw EnergieMulta();
@@ -388,13 +451,6 @@ void Caine::odihna() {
     std::cout<<"Cainele s-a odihnit. Energie actuala: "<<energie<<std::endl;
 }
 void Caine::afis(std::ostream& os) const {
-    os<<"Caine de sanie: ";
-    if(sanie) {
-        os<<"da "<<std::endl;
-    }
-    else {
-        os<<"nu "<<std::endl;
-    }
     os<<"loialitate: "<<loialitate<<std::endl;
     os<<"agilitate: "<<agilitate<<std::endl;
 
@@ -409,13 +465,9 @@ int Caine::extraPret() const {
         pretloc += 700;
     else
         pretloc += 200;
-
-    if (sanie) {
-        pretloc *= 2;
-    }
     pretloc += loialitate/2;
     pretloc += agilitate/2;
-    if (varsta > 6)
+    if (participari > 6)
         pretloc -= 400;
     return pretloc;
 }
@@ -427,13 +479,9 @@ int Caine::extraPerf() const {
         perf += 700;
     else
         perf += 200;
-
-    if (sanie) {
-        perf *= 2;
-    }
     perf += loialitate/2;
     perf += agilitate/2;
-    if (varsta > 6)
+    if (participari > 6)
         perf -= 300;
     return perf;
 }
@@ -447,138 +495,125 @@ std::shared_ptr<Animal> Caine::clone() const {
     return std::make_shared<Caine>(*this);
 }
 
-// clasa Antrenor
-template<typename T>
-class Antrenor {
+void Caine::antrenamentANTR() {
+    agilitate+=100;
+    loialitate+=100;
+    nivel++;
+}
+
+int Caine::actiuneSpeciala() {
+    int extraPop = 0;
+    if (loialitate>=100 && loialitate<200) {
+        extraPop+=2;
+    }
+    else if (loialitate>=200) {
+        extraPop+=4;
+    }
+    return extraPop;
+
+}
+
+
+
+class CaineFactory {
+    public:
+    static std::shared_ptr<Animal> createCaineStart(const std::string &nume, int participari, const std::string &av,
+        int nivel, int agilitate,int loialitate, const std::string &rasa);
+    static std::shared_ptr<Animal> createCaineMid(const std::string &nume, int participari, const std::string &av,
+    int nivel, int agilitate,int loialitate, const std::string &rasa);
+    static std::shared_ptr<Animal> createCaineEnd(const std::string &nume, int participari, const std::string &av,
+    int nivel, int agilitate,int loialitate, const std::string &rasa);
+
+};
+
+std::shared_ptr<Animal> CaineFactory::createCaineStart(const std::string &nume,
+    int participari,const std::string &av, int nivel, int agilitate,
+    int loialitate, const std::string &rasa) {
+    return std::make_shared<Caine>(nume,1,"viteza",1,100,100,"Dalmatian");
+
+}
+
+std::shared_ptr<Animal> CaineFactory::createCaineMid(const std::string &nume,
+    int participari,const std::string &av, int nivel, int agilitate,
+    int loialitate, const std::string &rasa) {
+    return std::make_shared<Caine>(nume,1,"agilitate",3,200,200,"Husky");
+
+}
+
+std::shared_ptr<Animal> CaineFactory::createCaineEnd(const std::string &nume,
+    int participari,const std::string &av, int nivel, int agilitate,
+    int loialitate, const std::string &rasa) {
+    return std::make_shared<Caine>(nume,1,"control",5,300,300,"Ogar");
+
+}
+template<typename A>
+class StrategieSelect;
+class Jucator;
+template<typename A>           
+class Oponent {
+protected:
+    std::vector<std::shared_ptr<A>> animale;  
     std::string nume;
     int experienta;
     std::string taraPreferata;
+    int victorii;
+    virtual void afis(std::ostream& os) const = 0;
+    std::shared_ptr<StrategieSelect<A>>strat;
 
-protected:
-    std::vector<std::shared_ptr<T>> animale;
-    virtual void afis(std::ostream&) const{}
 public:
+    Oponent(std::string nume,int experienta,std::vector<std::shared_ptr<A>> anim,std::string tara,std::shared_ptr<StrategieSelect<A>> strat);
 
-    Antrenor(std::string nume, int experienta, const std::vector<std::shared_ptr<T>> &anim, std::string taraPreferata);
+    virtual ~Oponent() = default;
 
-    virtual ~Antrenor() = default;
-    virtual void pregatire() = 0;
 
-    template<typename A>
-    friend std::ostream &operator<<(std::ostream &os, const Antrenor<A> &antrenor);
+    virtual void pregatire() {
+        for (auto &a : animale) {
+            a->antrenamentANTR();    
+        }
+    }
 
-    Antrenor &operator++();
+    Oponent& operator++() {
+        ++experienta;
+        return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os,const Oponent<A>& t)
+    {
+        t.afis(os);
+        os << "nume: " << t.nume << std::endl
+           << "ani experienta: " << t.experienta << std::endl;
+        return os;
+    }
+    [[nodiscard]] int getExp() const;
+    [[nodiscard]] int getVict() const;
+    std::shared_ptr<A> alegePentru(const Jucator& jucator) {
+        return strat->pick(this->animale, jucator);
+    }
+
+    void setStrategie(std::unique_ptr<StrategieSelect<A>> stratNou) {
+        strat = std::move(strat);
+    }
+
 
 };
 
-template<typename T>
-Antrenor<T>::Antrenor(std::string nume, int experienta, const std::vector<std::shared_ptr<T>> &anim, std::string taraPreferata):
-nume(std::move(nume)), experienta(experienta), taraPreferata(std::move(taraPreferata)){
-    for (auto const& a : anim) {
-        auto p = std::dynamic_pointer_cast<T>(a->clone());
-        if (!p)
-            throw std::runtime_error("fail ntrenor");
-        animale.push_back(std::move(p));
-    }
+template<typename A>
+int Oponent<A>::getExp() const {
+    return experienta;
 }
-template<typename T>
-std::ostream &operator<<(std::ostream &os, const Antrenor<T> &antrenor) {
-    antrenor.afis(os);
-    os<<"nume: "<<antrenor.nume<<std::endl<<
-        "ani experienta: "<<antrenor.experienta<<std::endl;
-    return os;
-}
-
-template<typename T>
-Antrenor<T> &Antrenor<T>::operator++() {
-    experienta++;
-    return *this;
-}
-
-//clasa Calaret
-
-class Calaret: virtual public Antrenor<Cal> {
-    int greutate;
-    int inaltime;
-    void afis(std::ostream &os) const override;
-
-public:
-    Calaret(const std::string &nume, int experienta, const std::vector<std::shared_ptr<Cal>>& cal,const std::string &taraPreferata,int greutate,int inaltime);
-    ~Calaret() override = default;
-
-    void pregatire()override;
-
-
-};
-Calaret::Calaret(const std::string &nume, int experienta,
-    const std::vector<std::shared_ptr<Cal>>& cal,const std::string &taraPreferata, int greutate, int inaltime):
-Antrenor<Cal>(nume,experienta,cal,taraPreferata),
-greutate(greutate), inaltime(inaltime) {
-
-}
-void Calaret::afis(std::ostream &os) const {
-    os<<"CALARET"<<std::endl;
-}
-
-void Calaret::pregatire() {
-    for (const auto& c: animale) {
-        c->antrenamentANTR();
-    }
-}
-
-class Dresor: virtual public Antrenor<Caine> {
-
-    int eficientaComanda;
-    void afis(std::ostream &os) const override;
-
-public:
-    Dresor(const std::string &nume, int experienta, const std::vector<std::shared_ptr<Caine>>& caini,const std::string &taraPreferata, int eficientaComanda);
-    void pregatire()override;
-};
-
-Dresor::Dresor(const std::string &nume, int experienta, const std::vector<std::shared_ptr<Caine>>& caini,const std::string &taraPreferata, int eficientaComanda):
-Antrenor<Caine>(nume,experienta,caini,taraPreferata), eficientaComanda(eficientaComanda) {
-
-}
-
-void Dresor::pregatire() {
-    for (const auto& c: animale) {
-        c->antrenamentANTR();
-    }
-}
-void Dresor::afis(std::ostream &os) const {
-    os<<"DRESOR"<<std::endl;
+template<typename A>
+int Oponent<A>::getVict() const {
+    return victorii;
 }
 
 
-//diamant
-class AntrenorHibrid : public Calaret, public Dresor {
-public:
+template<typename A>
+Oponent<A>::Oponent(std::string nume,int experienta, std::vector<std::shared_ptr<A>> anim,
+                    std::string tara, std::shared_ptr<StrategieSelect<A>> strat): animale(std::move(anim)),
+                    nume(std::move(nume)), experienta(experienta), taraPreferata(std::move(tara)),victorii(0),
+                    strat(std::move(strat))
+{}
 
-    AntrenorHibrid(
-        const std::string& nume,int experienta,const std::string& taraPreferata,
-        const std::vector<std::shared_ptr<Cal>>& cai,const std::vector<std::shared_ptr<Caine>>& caini,
-        int greutate,int inaltime,int eficientaComanda): Antrenor<Cal>(nume,experienta,cai,taraPreferata),
-    Antrenor<Caine>(nume,experienta,caini,taraPreferata),
-    Calaret(nume,experienta,cai,taraPreferata, greutate, inaltime),
-    Dresor(nume,experienta,caini,taraPreferata, eficientaComanda){
-
-    }
-
-
-protected:
-    void afis(std::ostream& os) const override {
-        os << "ANTRENOR HIBRID"<<std::endl;
-    }
-
-public:
-
-    void pregatire() override {
-        Calaret::pregatire();
-        Dresor ::pregatire();
-    }
-
-};
 
 //Jucator
 
@@ -586,6 +621,8 @@ class Jucator{
     std::string nume;
     std::vector<std::shared_ptr<Animal>> inventarp;
     int bani;
+    int victorii;
+    int popularitate;
 public:
     Jucator(std::string nume, const std::vector <std::shared_ptr<Animal>>& inventarp);
 
@@ -594,16 +631,18 @@ public:
     [[nodiscard]] const std::vector<std::shared_ptr<Animal>>& getAnimale() const;
     [[nodiscard]] int getBani()const;
     Jucator& operator-=(int suma);
+    void calcPop();
+    [[nodiscard]] std::string avantajPopular(const std::vector<std::shared_ptr<Animal>>& inventarp) const;
 
 };
 
 Jucator::Jucator(std::string nume, const std::vector<std::shared_ptr<Animal>>& invent):
-nume(std::move(nume)),bani(2000) {
+nume(std::move(nume)),bani(2000),victorii(0),popularitate(0) {
     for (auto const& i : invent) {
         inventarp.push_back(i->clone());
     }
-
 }
+
 Jucator& Jucator::operator-=(int suma) {
     if (bani < suma)
         throw BaniInsuficienti();
@@ -628,6 +667,82 @@ const std::vector<std::shared_ptr<Animal>>& Jucator::getAnimale() const {
     return inventarp;
 }
 
+void Jucator::calcPop() {
+    int poplinit = 0;
+    for (const auto& a : inventarp) {
+        if (const auto caine = std::dynamic_pointer_cast<Caine>(a)) {
+            poplinit += caine->actiuneSpeciala();
+        }
+    }
+    popularitate = poplinit + 2*victorii;
+}
+
+std::string Jucator::avantajPopular(const std::vector<std::shared_ptr<Animal>>& inventarp) const {
+    std::string cmPop = inventarp[0]->getAvantaj();
+    int maxPart = inventarp[0]->getParticipari();
+    for (const auto &i : inventarp) {
+        int part = i->getParticipari();
+        if (part > maxPart) {
+            maxPart = part;
+            cmPop = i->getAvantaj();
+        }
+    }
+    return cmPop;
+}
+
+
+template<typename A>
+class StrategieSelect {
+public:
+    virtual ~StrategieSelect() = default;
+    virtual std::shared_ptr<A> alege(std::vector<std::shared_ptr<A>> &anims,Jucator &juc) const = 0;
+};
+
+
+template<typename A>
+class BaseStrategie: public StrategieSelect<A> {
+public:
+    std::shared_ptr<A> alege(std::vector<std::shared_ptr<A>> &anims,Jucator &juc) const override;
+};
+
+template<typename A>
+std::shared_ptr<A> BaseStrategie<A>::alege(std::vector<std::shared_ptr<A>> &anims,Jucator &juc) const {
+    auto best = anims.front();
+    int bestscor = best.calculeazaPerf();
+    for (const auto &a: anims) {
+        int scor = a.calculeazaPerf();
+        if (scor>bestscor) {
+            best = a;
+            bestscor = scor;
+        }
+    }
+    return best;
+}
+
+template<typename A>
+class StrategieCounter: public StrategieSelect<A> {
+    const std::map<std::string, std::string> bate = {{"agilitate", "viteza"},{"viteza", "control"},
+        {"control","agilitate"}};
+public:
+    std::shared_ptr<A> alege(std::vector<std::shared_ptr<A>> &anims,Jucator &juc) const override;
+
+};
+
+template<typename A>
+std::shared_ptr<A> StrategieCounter<A>:: alege(std::vector<std::shared_ptr<A>> &anims, Jucator &juc) const {
+    const auto jucAnimale = juc.getAnimale();
+    const std::string avPop = juc.avantajPopular(jucAnimale);
+
+    std::string counter = bate.at(avPop);
+
+    for (const auto& a: anims) {
+        if (a.getAvantaj() == counter) {
+            return a;
+        }
+    }
+    return BaseStrategie<A> {}.alege(anims, juc);
+
+}
 
 //m1agazin
 class Magazin {
@@ -643,7 +758,7 @@ public:
     void adaugaAnimal(std::shared_ptr<Animal> animal);
     void afisInventar() const;
 
-    std::shared_ptr<Animal> cumparaAnimal(int id, Jucator &cumparator);
+    std::shared_ptr<Animal> cumparaAnimal(int id, const Jucator &cumparator);
 
 };
 
@@ -662,7 +777,7 @@ void Magazin::afisInventar() const {
     }
 }
 
-std::shared_ptr<Animal> Magazin::cumparaAnimal(int id, Jucator &cumparator) {
+std::shared_ptr<Animal> Magazin::cumparaAnimal(int id, const Jucator &cumparator) {
     const auto x = std::find_if(inventar.begin(),inventar.end(),
         [id](const std::shared_ptr<Animal>& a) {
         return a->getId() == id;
@@ -685,26 +800,20 @@ std::shared_ptr<Animal> Magazin::cumparaAnimal(int id, Jucator &cumparator) {
 
 
 //competitie
-template <typename T>
+
+template<typename A>
 class Competitie {
     std::string numeComp;
-    std::vector<std::shared_ptr<T>> animComp;
-    std::vector<std::shared_ptr<Antrenor<T>>> adversari;
-    Jucator jucator;
+    std::vector<std::shared_ptr<A>> participanti;
     std::string tara;
 
-    public:
-    Competitie (std::string nume, const std::vector<std::shared_ptr<T>>& animComp,
-        std::vector<std::shared_ptr<Antrenor<T>>> adv, Jucator  jucator, std::string tara);
+public:
+
+    Competitie(std::string nume,std::vector<std::shared_ptr<A>> participanti, std::string country): numeComp(std::move(nume)),
+    participanti(std::move(participanti)),tara(std::move(country)) {
+
+    }
 };
-
-
-template<typename T>
-Competitie<T>::Competitie(std::string nume, const std::vector<std::shared_ptr<T> > &animComp,
-    std::vector<std::shared_ptr<Antrenor<T>>> adv, Jucator jucator, std::string tara): numeComp(std::move(nume)), animComp(animComp),
-adversari(adv),jucator(std::move(jucator)), tara(std::move(tara)) {
-
-}
 
 class Meniu {
     Jucator player{"Andrei", {}};
@@ -753,7 +862,7 @@ void Meniu::afisOptiuni() {
 
 void Meniu::comandaAdaugaMagazin() {
     auto& shop = Magazin::instanta();
-    shop.adaugaAnimal(std::make_shared<Cal>("Sigma", 5, std::set<std::string>{"viteza"}, 1, 80, 90, "Epic"));
+    shop.adaugaAnimal(std::make_shared<Cal>(false,"Sigma", 5,"viteza", 1, 80, 90, "Epic"));
     std::cout << "animal adaugat in magazin\n";
 }
 
