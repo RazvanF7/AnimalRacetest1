@@ -131,6 +131,38 @@ FetchContent_MakeAvailable(googletest)
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME} main.cpp ${SOURCES}
+        src/Animal.cpp
+        include/Animal.h
+        src/Cal.cpp
+        include/Cal.h
+        src/Caine.cpp
+        include/Caine.h
+        src/Oponent.cpp
+        include/Oponent.h
+        src/Magazin.cpp
+        include/Magazin.h
+        src/Jucator.cpp
+        include/Jucator.h
+        src/Competitie.cpp
+        include/Competitie.h
+        src/Sprint.cpp
+        include/Sprint.h
+        src/Obstacole.cpp
+        include/Obstacole.h
+        src/Meniu.cpp
+        include/Meniu.h
+        src/StrategieSelect.cpp
+        include/StrategieSelect.h
+        src/StrategieCounter.cpp
+        include/StrategieCounter.h
+        src/BaseStrategie.cpp
+        include/BaseStrategie.h
+        src/CalFactory.cpp
+        include/CalFactory.h
+        src/CaineFactory.cpp
+        include/CaineFactory.h
+        src/Exceptii.cpp
+        include/Exceptii.h
 
 )
 
@@ -144,7 +176,10 @@ set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
 ###############################################################################
 
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
-target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE generated/include)
+target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE generated/include
+        ${googletest_SOURCE_DIR}/googletest/include
+        ${googletest_SOURCE_DIR}/googlemock/include
+        ${googletest_SOURCE_DIR}/googlemock/src)
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ext/<SomeHppLib>/include)
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
 # target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)
