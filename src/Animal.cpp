@@ -11,7 +11,7 @@ Animal::Animal():id(++nextId), nume("unknown"), avantaj("unknown"),
                   participari(0), energie(100) {
 }
 
-Animal::Animal(std::string nume, int participari, std::string av, int nivel) :
+Animal::Animal(std::string nume,std::string av, int nivel) :
 id(++nextId),nume(std::move(nume)), avantaj(std::move(av)), initPerf(100),
 pret(0), nivel(nivel), participari(0), energie(100) {
 }

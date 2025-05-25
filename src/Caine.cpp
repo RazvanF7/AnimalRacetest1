@@ -10,9 +10,9 @@ const std::set<std::string> Caine::rase = {"Husky", "Ogar", "Dalmatian"};
 bool Caine::eRasaValida(const std::string &rasa) {
     return rase.find(rasa) != rase.end();
 }
-Caine::Caine(const std::string &nume, int participari, const std::string &av,
+Caine::Caine(const std::string &nume, const std::string &av,
     int nivel, int loialitate, int agilitate, const std::string &rasa):
-Animal(nume, participari, av, nivel),loialitate(loialitate),agilitate(agilitate),rasa(rasa)
+Animal(nume, av, nivel),loialitate(loialitate),agilitate(agilitate),rasa(rasa)
 {
     if (!eRasaValida(rasa)) {
         throw RasaInvalida();

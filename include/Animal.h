@@ -27,7 +27,7 @@ protected:
 
 public:
     Animal();
-    Animal(std::string  nume, int participari, std::string av, int nivel);
+    Animal(std::string  nume, std::string av, int nivel);
     Animal(const Animal& other) = default;
 
     Animal& operator=(const Animal& other);

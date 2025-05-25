@@ -10,9 +10,9 @@ const std::set<std::string> Cal::raritati = {"Normal", "Epic", "Legendar"};
 bool Cal::eRaritateValida(const std::string &raritate) {
     return raritati.find(raritate) != raritati.end();
 }
-Cal::Cal(bool copiteCustom, const std::string &nume, int participari, const std::string &av,
+Cal::Cal(bool copiteCustom, const std::string &nume, const std::string &av,
     int nivel,int anduranta,int viteza, const std::string &raritate):
-Animal(nume, participari, av, nivel),
+Animal(nume, av, nivel),
 copiteCustom(copiteCustom),anduranta(anduranta),viteza(viteza),raritate(raritate)
 {
     if (!eRaritateValida(raritate)) {

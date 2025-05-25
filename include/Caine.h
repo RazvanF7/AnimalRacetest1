@@ -20,7 +20,7 @@ protected:
     [[nodiscard]] int extraPerf() const override;
 
 public:
-    Caine(const std::string &nume, int participari, const std::string &av, int nivel, int loialitate,int agilitate,const std::string &rasa);
+    Caine(const std::string &nume, const std::string &av, int nivel, int loialitate,int agilitate,const std::string &rasa);
     static bool eRasaValida(const std::string &rasa);
     void antreneaza() override;
     void odihna()override;

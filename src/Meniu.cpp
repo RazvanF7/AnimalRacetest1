@@ -57,11 +57,11 @@ void Meniu::ruleaza() {
 }
 void Meniu::initOponenti() {
 
-    std::shared_ptr<Animal> caine1 = std::make_shared<Caine>("Micah", 0, "viteza",1, 50,60,"Ogar");
-    std::shared_ptr<Animal> caine2 = std::make_shared<Caine>("Stinky", 0, "agilitate",2,60,70,"Dalmatian");
+    std::shared_ptr<Animal> caine1 = std::make_shared<Caine>("Micah", "viteza",1, 50,60,"Ogar");
+    std::shared_ptr<Animal> caine2 = std::make_shared<Caine>("Stinky", "agilitate",2,60,70,"Dalmatian");
 
-    std::shared_ptr<Animal> cal1   = std::make_shared<Cal>(false,"Arthur Morgan",0,"control",1,55,45,"Normal");
-    std::shared_ptr<Animal> cal2   = std::make_shared<Cal>(true,"Nicusor",0,"viteza",2,65,55,"Epic");
+    std::shared_ptr<Animal> cal1   = std::make_shared<Cal>(false,"Arthur Morgan","control",1,55,45,"Normal");
+    std::shared_ptr<Animal> cal2   = std::make_shared<Cal>(true,"Nicusor","viteza",2,65,55,"Epic");
 
     std::vector doarCaini{caine1,caine2};
     std::vector doarCai  {cal1,cal2};

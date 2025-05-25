@@ -20,7 +20,7 @@ protected:
     [[nodiscard]] int extraPerf() const override;
 
 public:
-    Cal(bool copiteCustom,const std::string &nume, int participari, const std::string &av, int nivel, int anduranta,int viteza,const std::string &raritate);
+    Cal(bool copiteCustom,const std::string &nume, const std::string &av, int nivel, int anduranta,int viteza,const std::string &raritate);
     static bool eRaritateValida(const std::string &raritate);
     void antreneaza() override;
     void odihna()override;
