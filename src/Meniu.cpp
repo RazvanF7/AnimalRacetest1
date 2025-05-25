@@ -147,7 +147,7 @@ void Meniu::comandaAntreneaza(){
 
 void Meniu::comandaOdihna() const {
     int id;
-    std::cout << "alege id-ul animalului pentru odihna: ";
+    std::cout << " alege id-ul animalului pentru odihna: ";
     std::cin >> id;
 
     for (auto& a : player.getAnimale()) {
