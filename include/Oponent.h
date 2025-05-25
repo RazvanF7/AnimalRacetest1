@@ -30,14 +30,15 @@
                 a->antrenamentANTR();
             }
         }
-
-        friend std::ostream& operator<<(std::ostream& os,const Oponent<A>& t)
-        {
-            os << "nume: " << t.nume << std::endl<<
-            "victorii: "<<t.victorii<< std::endl;
+        friend std::ostream& operator<<(std::ostream& os, const Oponent<A>& t) {
+            os << "Nume: " << t.nume << "\n";
+            os << "Victorii: " << t.victorii << "\n";
+            os << "Animale:\n";
+            for (const auto& a : t.animale) {
+                os << *a << "\n";  // Assuming Animal has operator<< overloaded
+            }
             return os;
         }
-
         std::shared_ptr<A> alegePentru(const Jucator& jucator) {
             return strat->alege(this->animale, jucator);
         }
