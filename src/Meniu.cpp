@@ -225,18 +225,14 @@ void Meniu::verificaCompetitii() {
     }
 
     if (allowed.empty()) {
-        std::cout << "Nu ai niciun animal eligibil ("
-                  << (isDogComp ? "câine" : "cal")
-                  << ") pentru această competiție.\n";
+        std::cout << "Nu ai niciun animal pentru aceasta competitie.\n";
         return;
     }
 
 
-    std::cout << "animalele tale pt "
-              << competitie->getNumeComp()
-              << "':\n";
+    std::cout << "animalele tale pt "<< competitie->getNumeComp()<< "':\n";
     for (auto& a : allowed) {
-        std::cout << "  id " << a->getId() << " — ";
+        std::cout << "  id " << a->getId() <<" ";
         std::cout<<*a;
     }
 
@@ -261,7 +257,7 @@ void Meniu::verificaCompetitii() {
     player.calcPop();
     if (player.getPop() > 20) {
         std::cout << " popularitate ta a crescut: oponentii isi schimba strategia\n";
-        for (auto& opp : oponenti) {
+        for (const auto& opp : oponenti) {
             opp->setStrategie(std::make_shared<StrategieCounter<Animal>>());
         }
     }
