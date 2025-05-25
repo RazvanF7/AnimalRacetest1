@@ -26,7 +26,7 @@ std::shared_ptr<A> StrategieCounter<A>:: alege(std::vector<std::shared_ptr<A>> &
     std::string counter = bate.at(avPop);
 
     for (const auto& a: anims) {
-        if (a.getAvantaj() == counter) {
+        if (a->getAvantaj() == counter) {
             return a;
         }
     }

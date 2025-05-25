@@ -32,10 +32,10 @@ protected:
             scorA2++;
         }
 
-        if (bate(anim1->getAvantaj(),anim2->getAvantaj())) {
+        if (this->bate(anim1->getAvantaj(),anim2->getAvantaj())) {
             scorA1+=2;
         }
-        else if (bate(anim2->getAvantaj(),anim1->getAvantaj())) {
+        else if (this->bate(anim2->getAvantaj(),anim1->getAvantaj())) {
             scorA2+=2;
         }
         if (scorA1>scorA2) {
@@ -48,9 +48,11 @@ protected:
     }
 
 public:
-    using Competitie<A>::Competitie;
-    int getExtraRewards(const std::shared_ptr<A> &anim) const {
-        if (distanta/anim.getSprint()>distanta/40)
+    Sprint(std::string nume,std::vector<std::shared_ptr<A>> part, std::string tara, const int distanta): Competitie<A>(nume, part, tara),
+    distanta(distanta) {}
+
+    int getExtraRewards(const std::shared_ptr<A> &anim) const override{
+        if (distanta/anim->getSprint()>distanta/40)
             return 300;
         return 0;
     }

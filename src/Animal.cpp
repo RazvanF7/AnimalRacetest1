@@ -56,10 +56,7 @@ std::ostream& operator<<(std::ostream& os, const Animal& animal) {
     <<"pret: "<<animal.calcPret()<<std::endl
     <<"energie: "<<animal.energie<<std::endl
     <<"nivel: "<<animal.nivel<<std::endl
-    <<"avantaje: "<<" ";
-    for (const auto &av : animal.avantaj) {
-        os<<av<<" ";
-    }
+    <<"avantaj: "<<animal.avantaj<<std::endl;
     os<<"id: "<<animal.id<<std::endl;
     animal.afis(os);
     return os;
@@ -116,4 +113,7 @@ std::string Animal::getAvantaj() const {
 
 int Animal::getParticipari() const {
     return participari;
+}
+std::string Animal::getNume() const {
+    return nume;
 }

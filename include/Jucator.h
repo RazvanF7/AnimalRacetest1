@@ -25,9 +25,11 @@ public:
     [[nodiscard]] const std::vector<std::shared_ptr<Animal>>& getAnimale() const;
     [[nodiscard]] int getBani()const;
     Jucator& operator-=(int suma);
+    Jucator& operator+=(int suma);
+    Jucator& operator++();
     void calcPop();
     [[nodiscard]] std::string avantajPopular(const std::vector<std::shared_ptr<Animal>>& inventarp) const;
-
+    [[nodiscard]] int getPop()const;
 };
 
 

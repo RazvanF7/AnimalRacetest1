@@ -9,12 +9,9 @@
 
 class CalFactory {
 public:
-    static std::shared_ptr<Animal> createCalStart(const std::string &nume, int participari, const std::string &av,
-        int nivel, int anduranta,int viteza, const std::string &raritate);
-    static std::shared_ptr<Animal> createCalMid(const std::string &nume, int participari, const std::string &av,
-    int nivel, int anduranta,int viteza, const std::string &raritate);
-    static std::shared_ptr<Animal> createCalEnd(const std::string &nume, int participari, const std::string &av,
-    int nivel, int anduranta,int viteza, const std::string &raritate);
+    static std::shared_ptr<Animal> createCalStart();
+    static std::shared_ptr<Animal> createCalMid();
+    static std::shared_ptr<Animal> createCalEnd();
 
 };
 

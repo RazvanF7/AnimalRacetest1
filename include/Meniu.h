@@ -7,18 +7,28 @@
 
 
 #include "Jucator.h"
+#include "Oponent.h"
+#include "Competitie.h"
 
 class Meniu {
+
     Jucator player{"Andrei", {}};
+    std::vector<std::shared_ptr<Oponent<Animal>>> oponenti;
+    int zi = 1;
+    std::vector<std::shared_ptr<Competitie<Animal>>> competitii;
+    void initOponenti();
 public:
     void ruleaza();
 private:
     static void afisOptiuni() ;
-    static void comandaAdaugaMagazin();
     static void comandaAfisMagazin() ;
     void comandaCumpara();
     void comandaAfisJucator() const;
-    void comandaAntreneaza() const;
+    void comandaAntreneaza();
+    void comandaOdihna() const;
+    void comandaAfisOponenti() const;
+    void initCompetitii();
+    void verificaCompetitii();
 };
 
 

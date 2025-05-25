@@ -7,7 +7,7 @@
 
 
 #include "Competitie.h"
-
+#include "Cal.h"
 template<typename A>
 class Obstacole: public Competitie<A> {
     int nrObs;
@@ -24,8 +24,8 @@ protected:
         else if (perfA1<perfA2) {
             scorA2++;
         }
-        int abilA1 = anim1->getObstacle();
-        int abilA2 = anim2->getObstacle();
+        int abilA1 = anim1->getObstacole();
+        int abilA2 = anim2->getObstacole();
         if (abilA1>abilA2) {
             scorA1++;
         }
@@ -33,10 +33,10 @@ protected:
             scorA2++;
         }
 
-        if (bate(anim1->getAvantaj(),anim2->getAvantaj())) {
+        if (this->bate(anim1->getAvantaj(),anim2->getAvantaj())) {
             scorA1+=2;
         }
-        else if (bate(anim2->getAvantaj(),anim1->getAvantaj())) {
+        else if (this->bate(anim2->getAvantaj(),anim1->getAvantaj())) {
             scorA2+=2;
         }
         if (scorA1>scorA2) {
@@ -48,17 +48,20 @@ protected:
         return 0;
     }
 public:
-    using Competitie<A>::Competitie;
-    int getExtraRewards(const std::shared_ptr<A> &anim) const {
+    Obstacole(std::string nume,std::vector<std::shared_ptr<A>> part, std::string tara, const int nrObs): Competitie<A>(nume, part, tara),
+    nrObs(nrObs) {}
+
+    int getExtraRewards(const std::shared_ptr<A> &anim) const override{
         int obsPerfecte = 0;
         int prag = nrObs*10;
-        while (anim->getObstacle()>prag) {
+        while (anim->getObstacole()>prag) {
             obsPerfecte++;
             prag += 50;
         }
         const int baniObs = obsPerfecte*50;
         return baniObs;
     }
+
 
 
 };

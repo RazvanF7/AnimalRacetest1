@@ -10,12 +10,9 @@
 
 class CaineFactory {
 public:
-    static std::shared_ptr<Animal> createCaineStart(const std::string &nume, int participari, const std::string &av,
-        int nivel, int agilitate,int loialitate, const std::string &rasa);
-    static std::shared_ptr<Animal> createCaineMid(const std::string &nume, int participari, const std::string &av,
-    int nivel, int agilitate,int loialitate, const std::string &rasa);
-    static std::shared_ptr<Animal> createCaineEnd(const std::string &nume, int participari, const std::string &av,
-    int nivel, int agilitate,int loialitate, const std::string &rasa);
+    static std::shared_ptr<Animal> createCaineStart();
+    static std::shared_ptr<Animal> createCaineMid();
+    static std::shared_ptr<Animal> createCaineEnd();
 
 };
 

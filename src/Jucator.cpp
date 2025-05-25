@@ -22,6 +22,14 @@ Jucator& Jucator::operator-=(int suma) {
     bani -= suma;
     return *this;
 }
+Jucator& Jucator::operator+=(int suma) {
+    bani += suma;
+    return *this;
+}
+Jucator& Jucator::operator++() {
+    victorii++;
+    return *this;
+}
 int Jucator::getBani() const{
     return bani;
 }
@@ -34,6 +42,8 @@ void Jucator::afisInventar() const {
     for (const auto& a: inventarp) {
         std::cout<<*a<<std::endl;
     }
+    std::cout<<"popularitate: "<<popularitate << std::endl<<
+        "victorii: "<<victorii << std::endl;
 }
 
 const std::vector<std::shared_ptr<Animal>>& Jucator::getAnimale() const {
@@ -61,4 +71,8 @@ std::string Jucator::avantajPopular(const std::vector<std::shared_ptr<Animal>>& 
         }
     }
     return cmPop;
+}
+
+int Jucator::getPop() const {
+    return popularitate;
 }

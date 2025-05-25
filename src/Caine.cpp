@@ -98,7 +98,6 @@ int Caine::actiuneSpeciala() {
         extraPop+=4;
     }
     return extraPop;
-
 }
 
 int Caine::getObstacole() const {
