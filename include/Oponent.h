@@ -9,7 +9,7 @@
     #include <memory>
     #include "StrategieSelect.h"
     #include "Jucator.h"
-
+    #include <iostream>
     template<typename A>
     class Oponent {
     protected:
