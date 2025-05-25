@@ -29,9 +29,6 @@ protected:
 
 public:
     virtual ~Competitie() = default;
-    bool accepts(const std::shared_ptr<A> &a) const {
-        return true;
-    }
     Competitie(std::string nume,std::vector<std::shared_ptr<A>> part, std::string tara): numeComp(std::move(nume)),
     participanti(std::move(part)),tara(std::move(tara)) {
 

@@ -17,6 +17,7 @@ public:
 
 template<typename A>
 std::shared_ptr<A> BaseStrategie<A>::alege(std::vector<std::shared_ptr<A>> &anims,Jucator &juc) const {
+    (void) juc;
     auto best = anims.front();
     int bestscor = best->calculeazaPerf();
     for (const auto &a: anims) {
