@@ -117,3 +117,7 @@ int Animal::getParticipari() const {
 std::string Animal::getNume() const {
     return nume;
 }
+
+void Animal::crestePart() {
+    participari++;
+}

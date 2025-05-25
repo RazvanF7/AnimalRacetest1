@@ -249,6 +249,7 @@ void Meniu::verificaCompetitii() {
     for (auto& a : allowed) {
         if (a->getId() == idAnimal) {
             ales = a;
+            a->crestePart();
             break;
         }
     }
