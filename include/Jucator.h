@@ -28,7 +28,7 @@ public:
     Jucator& operator+=(int suma);
     Jucator& operator++();
     void calcPop();
-    [[nodiscard]] std::string avantajPopular(const std::vector<std::shared_ptr<Animal>>& inventarp) const;
+    [[nodiscard]] std::string avantajPopular(const std::vector<std::shared_ptr<Animal>>& inventar) const;
     [[nodiscard]] int getPop()const;
 };
 
