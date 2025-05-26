@@ -48,8 +48,8 @@ void Meniu::ruleaza() {
             default:
                 std::cout << "alege alta optiune\n";
         }
-
-        verificaCompetitii();
+        if (!iesire)
+            verificaCompetitii();
         if (!iesire) {
             std::cin.get();
         }
