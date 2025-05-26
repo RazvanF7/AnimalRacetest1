@@ -26,7 +26,7 @@ void Caine::antreneaza() {
     }
 
     energie-=20;
-    loialitate+=40;
+    loialitate+=20;
     agilitate+=20;
     std::cout<<"Antrenament finalizat. Energie ramasa: "<<energie<<std::endl;
 }

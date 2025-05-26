@@ -57,10 +57,10 @@ void Jucator::calcPop() {
             poplinit += caine->actiuneSpeciala();
         }
     }
-    popularitate = poplinit + 2*victorii;
+    popularitate += poplinit + 2*victorii;
 }
 
-std::string Jucator::avantajPopular(const std::vector<std::shared_ptr<Animal>>& inventar) const {
+std::string Jucator::avantajPopular(const std::vector<std::shared_ptr<Animal>>& inventar) {
     std::string cmPop = inventar[0]->getAvantaj();
     int maxPart = inventar[0]->getParticipari();
     for (const auto &i : inventar) {

@@ -94,7 +94,7 @@ int Animal::extraPerf() const{
     return 0;
 }
 
-std::string Animal::getAvantaj() const {
+const std::string& Animal::getAvantaj() const {
     return avantaj;
 }
 

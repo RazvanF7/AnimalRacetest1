@@ -24,7 +24,7 @@ public:
     static bool eRaritateValida(const std::string &raritate);
     void antreneaza() override;
     void odihna()override;
-    void upgradeCopite();
+    /*void upgradeCopite();*/
     [[nodiscard]] std::shared_ptr<Animal> clone() const override;
     bool operator<(const Cal& other) const;
     void antrenamentANTR() override;

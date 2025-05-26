@@ -22,7 +22,6 @@ protected:
     [[nodiscard]] virtual int extraPret() const;
     int participari;
     int energie;
-    [[nodiscard]] int getInitPerf() const;
     [[nodiscard]] virtual int extraPerf() const;
 
 public:
@@ -65,7 +64,7 @@ public:
 
     virtual int actiuneSpeciala() = 0;
 
-    [[nodiscard]] std::string getAvantaj() const;
+    [[nodiscard]] const std::string& getAvantaj() const;
 
     [[nodiscard]] int getParticipari() const;
 

@@ -20,9 +20,9 @@ copiteCustom(copiteCustom),anduranta(anduranta),viteza(viteza),raritate(raritate
     }
 
 }
-void Cal::upgradeCopite() {
+/*void Cal::upgradeCopite() {
     copiteCustom = true;
-}
+}*/
 void Cal::antreneaza() {
     if (energie<20) {
         throw EnergiePutina();

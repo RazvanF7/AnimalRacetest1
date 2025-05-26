@@ -35,11 +35,11 @@
             os << "Victorii: " << t.victorii << "\n";
             os << "Animale:\n";
             for (const auto& a : t.animale) {
-                os << *a << "\n";  // Assuming Animal has operator<< overloaded
+                os << *a << "\n";
             }
             return os;
         }
-        std::shared_ptr<A> alegePentru(const Jucator& jucator) {
+        std::shared_ptr<A> alegePentru(Jucator& jucator) {
             return strat->alege(this->animale, jucator);
         }
 

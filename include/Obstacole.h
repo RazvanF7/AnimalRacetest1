@@ -48,7 +48,7 @@ protected:
         return 0;
     }
 public:
-    Obstacole(const std::string &nume,std::vector<std::shared_ptr<A>> part, const std::string &tara, const int nrObs): Competitie<A>(nume, part, tara),
+    Obstacole(const std::string &nume,const std::vector<std::shared_ptr<A>> &part, const std::string &tara, const int nrObs): Competitie<A>(nume, part, tara),
     nrObs(nrObs) {}
 
     int getExtraRewards(const std::shared_ptr<A> &anim) const override{
