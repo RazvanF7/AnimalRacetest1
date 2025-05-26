@@ -101,10 +101,7 @@ std::string Animal::getAvantaj() const {
 int Animal::getParticipari() const {
     return participari;
 }
-std::string Animal::getNume() const {
+const std::string& Animal::getNume() const {
     return nume;
 }
 
-void Animal::crestePart() {
-    participari++;
-}

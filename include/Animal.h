@@ -71,8 +71,7 @@ public:
 
     [[nodiscard]] virtual int getObstacole() const = 0;
     [[nodiscard]] virtual int getSprint() const = 0;
-    [[nodiscard]] std::string getNume() const;
-    void crestePart();
+    [[nodiscard]] const std::string& getNume() const;
 };
 
 

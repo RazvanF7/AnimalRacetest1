@@ -29,29 +29,28 @@ protected:
 
 public:
     virtual ~Competitie() = default;
-    Competitie(std::string nume,std::vector<std::shared_ptr<A>> part, std::string tara): numeComp(std::move(nume)),
-    participanti(std::move(part)),tara(std::move(tara)) {
+    Competitie(const std::string &nume,std::vector<std::shared_ptr<A>> part, const std::string &tara): numeComp(nume),
+    participanti(std::move(part)),tara(tara) {
 
     }
 
     [[nodiscard]] std::vector<std::shared_ptr<A>> run() const;
 
     [[nodiscard]] virtual int getExtraRewards(const std::shared_ptr<A> &anim) const = 0;
-    [[nodiscard]] std::string getNumeComp() const {
+    [[nodiscard]] const std::string& getNumeComp() const {
         return numeComp;
-    };
+    }
 };
 
 
 template<typename A>
 std::vector<std::shared_ptr<A>> Competitie<A>::run() const {
-    // make a mutable copy
     std::vector<std::shared_ptr<A>> rezultate = participanti;
 
-    int n = rezultate.size();
+    const int n = rezultate.size();
     std::unordered_map<int,int> scor;
     scor.reserve(n);
-    for (auto &a : rezultate) {
+    for (const auto &a : rezultate) {
         scor[a->getId()] = 0;
     }
 

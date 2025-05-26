@@ -138,7 +138,7 @@ void Meniu::comandaAntreneaza(){
     int id;
     std::cout << " alege id ul animalului ";
     std::cin >> id;
-    for (auto& a : player.getAnimale()) {
+    for (const auto& a : player.getAnimale()) {
         if (a->getId() == id) {
             try {
                 a->antreneaza();
@@ -158,7 +158,7 @@ void Meniu::comandaOdihna() const {
     std::cout << " alege id-ul animalului pentru odihna: ";
     std::cin >> id;
 
-    for (auto& a : player.getAnimale()) {
+    for (const auto& a : player.getAnimale()) {
         if (a->getId() == id) {
             try {
                 a->odihna();
@@ -220,7 +220,7 @@ void Meniu::verificaCompetitii() {
 
 
     std::vector<std::shared_ptr<Animal>> allowed;
-    for (auto& a : player.getAnimale()) {
+    for (const auto& a : player.getAnimale()) {
         if (isDogComp) {
 
             if (dynamic_cast<Caine*>(a.get()))
@@ -250,7 +250,7 @@ void Meniu::verificaCompetitii() {
     std::cin >> idAnimal;
 
     std::shared_ptr<Animal> ales;
-    for (auto& a : allowed) {
+    for (const auto& a : allowed) {
         if (a->getId() == idAnimal) {
             ales = a;
             (*a)++;
@@ -292,10 +292,10 @@ void Meniu::verificaCompetitii() {
 
 
     if (dynamic_cast<Sprint<Animal>*>(competitie.get())) {
-        auto sprint = dynamic_cast<Sprint<Animal>*>(competitie.get());
+        const auto* sprint = dynamic_cast<Sprint<Animal>*>(competitie.get());
         compNou = std::make_shared<Sprint<Animal>>(sprint->getNumeComp(), participanti, "RO", 100);
     } else {
-        auto obst = dynamic_cast<Obstacole<Animal>*>(competitie.get());
+        const auto* obst = dynamic_cast<Obstacole<Animal>*>(competitie.get());
         compNou = std::make_shared<Obstacole<Animal>>(obst->getNumeComp(), participanti, "RO", 5);
     }
 
@@ -311,7 +311,7 @@ void Meniu::verificaCompetitii() {
     int recompensa = 400;
     int loc = 1;
 
-    for (auto& a : clasament) {
+    for (const auto& a : clasament) {
         std::cout << loc << ". " << a->getNume() << " id: " << a->getId() << "\n";
 
         if (loc == 1) {
@@ -337,7 +337,7 @@ void Meniu::verificaCompetitii() {
                 }
             }
         }
-        for (auto& a_player : player.getAnimale()) {
+        for (const auto& a_player : player.getAnimale()) {
             if (a_player->getId() == a->getId()) {
                 player+=recompensa;
                 std::cout << " ai primit " << recompensa << " bani pentru locul " << loc << "!\n";

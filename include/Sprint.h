@@ -48,7 +48,7 @@ protected:
     }
 
 public:
-    Sprint(std::string nume,std::vector<std::shared_ptr<A>> part, std::string tara, const int distanta): Competitie<A>(nume, part, tara),
+    Sprint(const std::string &nume,std::vector<std::shared_ptr<A>> part, const std::string &tara, const int distanta): Competitie<A>(nume, part, tara),
     distanta(distanta) {}
 
     int getExtraRewards(const std::shared_ptr<A> &anim) const override{
