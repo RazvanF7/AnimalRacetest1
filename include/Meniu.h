@@ -17,9 +17,9 @@ class Meniu {
     int zi = 1;
     std::vector<std::shared_ptr<Competitie<Animal>>> competitii;
     void initOponenti();
-public:
-    void ruleaza();
-private:
+    bool iesire = false;
+    void stop();
+    [[nodiscard]] bool getIesire()const;
     static void afisOptiuni() ;
     static void comandaAfisMagazin() ;
     void comandaCumpara();
@@ -29,6 +29,10 @@ private:
     void comandaAfisOponenti() const;
     void initCompetitii();
     void verificaCompetitii();
+public:
+    void ruleaza();
+private:
+
 };
 
 

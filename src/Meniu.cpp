@@ -18,6 +18,13 @@
 #include "../include/Obstacole.h"
 #include "../include/Sprint.h"
 #include "../include/StrategieCounter.h"
+void Meniu::stop() {
+    iesire = true;
+}
+bool Meniu::getIesire() const{
+    return iesire;
+}
+
 void Meniu::ruleaza() {
     auto& shop = Magazin::instanta();
 
@@ -32,8 +39,8 @@ void Meniu::ruleaza() {
     initOponenti();
     initCompetitii();
 
-    bool iesire = false;
-    while (!iesire) {
+
+    while (!getIesire()) {
         afisOptiuni();
         int opt;
         std::cin >> opt;
@@ -44,17 +51,18 @@ void Meniu::ruleaza() {
             case 4: comandaAntreneaza();   break;
             case 5: comandaOdihna();       break;
             case 6: comandaAfisOponenti(); break;
-            case 0: iesire = true;         break;
+            case 0: stop();         break;
             default:
                 std::cout << "alege alta optiune\n";
         }
-        if (!iesire)
+        if (!getIesire())
             verificaCompetitii();
-        if (!iesire) {
+        if (!getIesire()) {
             std::cin.get();
         }
     }
 }
+
 void Meniu::initOponenti() {
 
     std::shared_ptr<Animal> caine1 = std::make_shared<Caine>("Micah", "viteza",1, 50,60,"Ogar");
@@ -245,7 +253,7 @@ void Meniu::verificaCompetitii() {
     for (auto& a : allowed) {
         if (a->getId() == idAnimal) {
             ales = a;
-            a->crestePart();
+            (*a)++;
             break;
         }
     }

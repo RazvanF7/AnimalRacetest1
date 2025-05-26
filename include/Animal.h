@@ -34,7 +34,9 @@ public:
 
     virtual ~Animal() = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const Animal& animal);
+    [[nodiscard]] virtual int calcPret() ;
+
+    friend std::ostream& operator<<(std::ostream& os, Animal& animal);
 
     friend std::istream& operator>>(std::istream& is, Animal& animal);
 
@@ -44,7 +46,7 @@ public:
 
     virtual void odihna();
 
-    [[nodiscard]] virtual int calcPret() const;
+
 
     [[nodiscard]] virtual std::shared_ptr<Animal> clone() const = 0;
 

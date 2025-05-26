@@ -17,6 +17,7 @@ pret(0), nivel(nivel), participari(0), energie(100) {
 }
 
 
+
 Animal &Animal::operator=(const Animal &other) {
     if (this != &other) {
         nume = other.nume;
@@ -39,18 +40,14 @@ int Animal::extraPret() const {
     return 0;
 }
 
-int Animal::calcPret() const {
-    int i = 0;
-    int pretTotal = 0;
-    pretTotal += extraPret();
-    for ([[maybe_unused]] const auto &av : avantaj) {
-        i++;
-    }
-    pretTotal += i*100+ nivel*100;
-    return pretTotal;
+int Animal::calcPret()  {
+    pret = 0;
+    pret += extraPret();
+    pret += nivel*100;
+    return pret;
 }
 
-std::ostream& operator<<(std::ostream& os, const Animal& animal) {
+std::ostream& operator<<(std::ostream& os, Animal& animal) {
     os<<"nume: "<<animal.nume<<std::endl
     <<"participari: "<<animal.participari<<std::endl
     <<"pret: "<<animal.calcPret()<<std::endl
@@ -73,12 +70,6 @@ Animal &Animal::operator++() {
         return *this;
     }
 
-bool operator<(const Animal& a, const Animal& b) {
-    return a.calcPret() < b.calcPret();
-}
-bool operator==(const Animal& a, const Animal& b) {
-    return a.calcPret() == b.calcPret();
-}
 void Animal::odihna() {
     if (energie>80) {
         throw EnergieMulta();
@@ -92,16 +83,12 @@ int Animal::getId() const {
     return id;
 }
 
-int Animal::getInitPerf() const {
+int Animal::calculeazaPerf(){
+    initPerf += extraPerf();
+    initPerf += nivel*100;
     return initPerf;
 }
 
-int Animal::calculeazaPerf() {
-    int perf = initPerf;
-    perf += extraPerf();
-    perf += nivel*100;
-    return perf;
-}
 
 int Animal::extraPerf() const{
     return 0;
