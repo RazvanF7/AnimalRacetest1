@@ -336,7 +336,7 @@ void Meniu::verificaCompetitii() {
         }
         if (!propr) {
             for (const auto& op : oponenti) {
-                for (auto& ao : op->getAnimale()) {
+                for (const auto& ao : op->getAnimale()) {
                     if (ao->getId() == a->getId()) {
                         propr = op.get();
                         break;
