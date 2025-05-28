@@ -21,7 +21,7 @@ public:
 template<typename A>
 std::shared_ptr<A> StrategieCounter<A>:: alege(std::vector<std::shared_ptr<A>> &anims, Jucator &juc) const {
     const auto jucAnimale = juc.getAnimale();
-    const std::string avPop = juc.avantajPopular(jucAnimale);
+    const std::string avPop = Jucator::avantajPopular(jucAnimale);
 
     std::string counter = bate.at(avPop);
 

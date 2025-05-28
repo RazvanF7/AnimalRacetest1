@@ -147,7 +147,6 @@ add_executable(${MAIN_EXECUTABLE_NAME} main.cpp ${SOURCES}
         include/Competitie.h
         src/Sprint.cpp
         include/Sprint.h
-        src/Obstacole.cpp
         include/Obstacole.h
         src/Meniu.cpp
         include/Meniu.h

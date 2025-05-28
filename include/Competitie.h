@@ -65,9 +65,7 @@ std::vector<std::shared_ptr<A>> Competitie<A>::run() const {
         }
     }
 
-    std::sort(
-      rezultate.begin(), rezultate.end(),
-      [scor](auto &anim1, auto &anim2) {
+    std::sort(rezultate.begin(), rezultate.end(),[scor](auto &anim1, auto &anim2) {
           int s1 = scor.at(anim1->getId());
           int s2 = scor.at(anim2->getId());
           if (s1 != s2) return s1 > s2;
