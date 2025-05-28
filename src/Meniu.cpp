@@ -10,7 +10,6 @@
 #include <Caine.h>
 
 #include "BaseStrategie.h"
-#include "Oponent.h"
 #include "../include/CalFactory.h"
 #include "../include/CaineFactory.h"
 #include "../include/Magazin.h"
@@ -27,7 +26,8 @@ bool Meniu::getIesire() const{
 
 void Meniu::ruleaza() {
     auto& shop = Magazin::instanta();
-
+    std::cout<<"Care este numele tau? \n";
+    std::cin>>jucatorOm;
     shop.adaugaAnimal(CaineFactory::createCaineStart());
     shop.adaugaAnimal(CaineFactory::createCaineMid());
     shop.adaugaAnimal(CaineFactory::createCaineEnd());
@@ -71,14 +71,14 @@ void Meniu::initOponenti() {
     const std::shared_ptr<Animal> cal1   = std::make_shared<Cal>(false,"Arthur Morgan","control",1,100,45,"Normal");
     const std::shared_ptr<Animal> cal2   = std::make_shared<Cal>(true,"Nicusor","viteza",2,80,55,"Epic");
 
-    std::vector doarCaini{caine1,caine2};
-    std::vector doarCai  {cal1,cal2};
+    std::vector invOp1 {caine1,cal1};
+    std::vector invOp2  {caine2,cal2};
 
-    std::shared_ptr<StrategieSelect<Animal>> stratBase1 = std::make_shared<BaseStrategie<Animal>>();
-    std::shared_ptr<StrategieSelect<Animal>> stratBase2 = std::make_shared<BaseStrategie<Animal>>();
+    std::shared_ptr<StrategieSelect> strat1 = std::make_shared<BaseStrategie>();
+    std::shared_ptr<StrategieSelect> strat2 = std::make_shared<BaseStrategie>();
 
-    oponenti.push_back(std::make_shared<Oponent<Animal>>("Hosea",std::move(doarCaini),stratBase1));
-    oponenti.push_back(std::make_shared<Oponent<Animal>>("Dutch",std::move(doarCai),stratBase2));
+    oponenti.push_back(std::make_shared<Jucator>("Hosea",invOp1,strat1));
+    oponenti.push_back(std::make_shared<Jucator>("Dutch",invOp2,strat2));
 }
 void Meniu::afisOptiuni() {
     std::cout
@@ -102,7 +102,7 @@ void Meniu::comandaCumpara() {
     std::cin >> id;
     std::shared_ptr<Animal> animal;
     try {
-            animal = Magazin::instanta().cumparaAnimal(id, player);
+            animal = Magazin::instanta().cumparaAnimal(id, jucatorOm);
     }
     catch (const BaniInsuficienti& e) {
         std::cout << "eroare: " << e.what() << "\n";
@@ -112,25 +112,25 @@ void Meniu::comandaCumpara() {
         std::cout << "nu exista animalul\n";
     }
     else {
-        player.adaugaAnimal(animal);
+        jucatorOm.adaugaAnimal(animal);
         std::cout << "animal adaugat in inventar\n";
-        player-=animal->calcPret();
+        jucatorOm-=animal->calcPret();
     }
 
     //TODO de verificat si corectat exceptii,
 }
 
 void Meniu::comandaAfisJucator() const {
-    player.afisInventar();
+    jucatorOm.afisInventar();
     std::cout<<"\n";
-    std::cout <<"bani: "<<player.getBani()<<std::endl;
+    std::cout <<"bani: "<<jucatorOm.getBani()<<std::endl;
 }
 
 void Meniu::comandaAntreneaza(){
     int id;
     std::cout << " alege id ul animalului ";
     std::cin >> id;
-    for (const auto& a : player.getAnimale()) {
+    for (const auto& a : jucatorOm.getAnimale()) {
         if (a->getId() == id) {
             try {
                 a->antreneaza();
@@ -151,7 +151,7 @@ void Meniu::comandaOdihna() const {
     std::cout << " alege id-ul animalului pentru odihna: ";
     std::cin >> id;
 
-    for (const auto& a : player.getAnimale()) {
+    for (const auto& a : jucatorOm.getAnimale()) {
         if (a->getId() == id) {
             try {
                 a->odihna();
@@ -191,11 +191,10 @@ void Meniu::initCompetitii() {
 
 
 void Meniu::verificaCompetitii() {
-    if (zi % 5 != 0) return;
+ if (zi % 5 != 0) return;
     std::vector<std::shared_ptr<Animal>> allowed;
     std::shared_ptr<Competitie<Animal>> competitie;
-
-    
+    bool esteCompCaini = false;
     while (true) {
         allowed.clear();
         std::cout << "\n competitii disponibile (ziua " << zi << ") \n";
@@ -207,25 +206,19 @@ void Meniu::verificaCompetitii() {
         std::cout << "alege competitia dorita (1-" << competitii.size() << "): ";
         std::cin >> alegereComp;
 
-        if (alegereComp < 1 || alegereComp > (int)competitii.size()) {
+        if (alegereComp < 1 || alegereComp > static_cast<int>(competitii.size())) {
             std::cout << "alegere invalida.\n";
             continue;
         }
 
         competitie = competitii[alegereComp - 1];
-        bool esteCompCaini = (competitie->getNumeComp().find("Caini") != std::string::npos);
+        esteCompCaini = (competitie->getNumeComp().find("Caini") != std::string::npos);
 
-
-
-        for (const auto& a : player.getAnimale()) {
-            if (esteCompCaini) {
-
-                if (dynamic_cast<Caine*>(a.get()))
-                    allowed.push_back(a);
-            } else {
-
-                if (dynamic_cast<Cal*>(a.get()))
-                    allowed.push_back(a);
+        for (const auto& a : jucatorOm.getAnimale()) {
+            if (esteCompCaini && dynamic_cast<Caine*>(a.get())) {
+                allowed.push_back(a);
+            } else if (!esteCompCaini && dynamic_cast<Cal*>(a.get())) {
+                allowed.push_back(a);
             }
         }
 
@@ -234,48 +227,76 @@ void Meniu::verificaCompetitii() {
             continue;
         }
 
-
-        std::cout << "animalele tale pt "<< competitie->getNumeComp()<< ":\n";
+        std::cout << "animalele tale pt " << competitie->getNumeComp() << ":\n";
         for (const auto& a : allowed) {
-            std::cout << "  id " << a->getId() <<" ";
-            std::cout<<*a;
+            std::cout << "  id " << a->getId() << " " << *a;
         }
         break;
     }
-        int idAnimal;
-        std::cout << "alege ID-ul dintre cele de mai sus: ";
-        std::cin >> idAnimal;
 
-        std::shared_ptr<Animal> ales;
-        for (const auto& a : allowed) {
-            if (a->getId() == idAnimal) {
-                ales = a;
-                (*a)++;
-                break;
-            }
-        }
-        if (!ales) {
-            std::cout << "id invalid pentru competitie\n";
-            return;
-        }
+    int idAnimal;
+    std::cout << "alege ID-ul dintre cele de mai sus: ";
+    std::cin >> idAnimal;
 
-    player.calcPop();
-    if (player.getPop() > 20) {
-        std::cout << " popularitate ta a crescut: oponentii isi schimba strategia\n";
-        for (const auto& op : oponenti) {
-            op->setStrategie(std::make_shared<StrategieCounter<Animal>>());
+    std::shared_ptr<Animal> ales;
+    for (const auto& a : allowed) {
+        if (a->getId() == idAnimal) {
+            ales = a;
+            (*a)++;
+            break;
+        }
+    }
+    if (!ales) {
+        std::cout << "id invalid pentru competitie\n";
+        return;
+    }
+
+    jucatorOm.calcPop();
+
+    int maxPop = jucatorOm.getPop();
+    auto avpop = Jucator::avantajPopular(jucatorOm.getAnimale());
+    auto tinta = jucatorOm.getId();
+
+
+    for (const auto& op : oponenti) {
+        op->calcPop();
+        if (op->getPop() > 20 && op->getPop() > maxPop) {
+            maxPop = op->getPop();
+            avpop = op->avantajPopular(op->getAnimale());
+            tinta = op->getId();
+        }
+    }
+
+    for (const auto& op : oponenti) {
+        if (op->getId() != tinta && op->getPop() > 20) {
+            std::cout << op->getNume() << " isi schimba strategia catre contra ";
+            op->setStrategie(std::make_shared<StrategieCounter>());
         }
     }
 
     std::vector<std::shared_ptr<Animal>> participanti;
     participanti.push_back(ales);
 
-    for (const auto& op : oponenti){
-            const auto& aOp = op->alegePentru(player);
-            if ((dynamic_cast<Cal*>(ales.get())   && dynamic_cast<Cal*>(aOp.get())) ||
-            (dynamic_cast<Caine*>(ales.get()) && dynamic_cast<Caine*>(aOp.get())))
-                participanti.push_back(aOp);
+    for (const auto& op : oponenti) {
+        std::vector<std::shared_ptr<Animal>> cand;
+        for (auto& a : op->getAnimale()) {
+            if (esteCompCaini) {
+                if (dynamic_cast<Caine*>(a.get())) {
+                    cand.push_back(a);
+                }
+            }
+            else {
+                if (dynamic_cast<Cal*>(a.get())) {
+                    cand.push_back(a);
+                }
+            }
         }
+        if (cand.empty())
+            continue;
+
+        auto aOp = op->getStrategie()->alege(cand, avpop);
+        participanti.push_back(aOp);
+    }
 
     if (participanti.size() < 2) {
         std::cout << "prea putini participanti\n";
@@ -301,52 +322,52 @@ void Meniu::verificaCompetitii() {
     }
 
     std::cout << "\n clasament final \n";
-
     int recompensa = 400;
     int loc = 1;
 
-    for (const auto& a : clasament) {
-        std::cout << loc << ". " << a->getNume() << " id: " << a->getId() << "\n";
+    for (auto& a : clasament) {
 
-        if (loc == 1) {
-            bool esteJucator = false;
-
-            for (const auto& a_player : player.getAnimale()) {
-                if (a_player->getId() == a->getId()) {
-                    esteJucator = true;
-                    break;
-                }
+        Jucator* propr = nullptr;
+        for (auto& ap : jucatorOm.getAnimale()) {
+            if (ap->getId() == a->getId()) {
+                propr = &jucatorOm;
+                break;
             }
-
-            if (esteJucator) {
-                ++player;
-            } else {
-                for (const auto& opp : oponenti) {
-                    for (const auto& a_opp : opp->getAnimale()) {
-                        if (a_opp->getId() == a->getId()) {
-                            ++(*opp);
-                            break;
-                        }
+        }
+        if (!propr) {
+            for (auto& op : oponenti) {
+                for (auto& ao : op->getAnimale()) {
+                    if (ao->getId() == a->getId()) {
+                        propr = op.get();
+                        break;
                     }
                 }
+                if (propr) break;
             }
         }
-        for (const auto& a_player : player.getAnimale()) {
-            if (a_player->getId() == a->getId()) {
-                player+=recompensa;
-                std::cout << " ai primit " << recompensa << " bani pentru locul " << loc << "!\n";
-            }
-        }
-        if (a->getId() == ales->getId()) {
-            const int extra = compNou->getExtraRewards(ales);
-            player += extra;
-            std::cout << "bonus extra: " <<extra<<"\n";
+        
+        std::cout << loc << ". " << a->getNume()
+                  << " id: " << a->getId() << "\n";
+
+        if (loc == 1 && propr) {
+            ++(*propr);
         }
 
+        if (propr) {
+            *propr += recompensa;
+            std::cout 
+              << propr->getNume()<< " a primit " << recompensa << " bani pentru locul "<< loc <<std::endl;
+        }
+
+        const int extra = compNou->getExtraRewards(a);
+        if (propr) {
+            *propr += extra;
+            std::cout << propr->getNume() << " a primit bonus extra: " << extra << std::endl;
+        }
+        
         recompensa = std::max(0, recompensa - 150);
         ++loc;
     }
 
     std::cout << "\n competitia s a incheiat\n";
-
 }

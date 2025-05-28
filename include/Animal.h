@@ -33,7 +33,7 @@ public:
 
     virtual ~Animal() = default;
 
-    [[nodiscard]] virtual int calcPret() ;
+    [[nodiscard]] int calcPret() ;
 
     friend std::ostream& operator<<(std::ostream& os, Animal& animal);
 
@@ -59,8 +59,7 @@ public:
     [[nodiscard]] int getId() const;
 
     virtual void antrenamentANTR() = 0;
-
-    virtual int calculeazaPerf();
+    int calculeazaPerf();
 
     virtual int actiuneSpeciala() = 0;
 

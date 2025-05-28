@@ -7,13 +7,12 @@
 
 
 #include "Jucator.h"
-#include "Oponent.h"
 #include "Competitie.h"
 
 class Meniu {
 
-    Jucator player{"Andrei", {}};
-    std::vector<std::shared_ptr<Oponent<Animal>>> oponenti;
+    Jucator jucatorOm;
+    std::vector<std::shared_ptr<Jucator>> oponenti;
     int zi = 1;
     std::vector<std::shared_ptr<Competitie<Animal>>> competitii;
     void initOponenti();
@@ -31,7 +30,7 @@ class Meniu {
     void verificaCompetitii();
 public:
     void ruleaza();
-private:
+
 
 };
 

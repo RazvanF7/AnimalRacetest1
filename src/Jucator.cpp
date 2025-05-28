@@ -6,11 +6,11 @@
 #include "../include/Caine.h"
 #include "../include/Cal.h"
 #include "../include/Exceptii.h"
-
 #include <iostream>
-
-Jucator::Jucator(std::string nume, const std::vector<std::shared_ptr<Animal>>& invent):
-nume(std::move(nume)),bani(2000),victorii(0),popularitate(0) {
+int Jucator::cont = 0;
+Jucator::Jucator():id(++cont),nume("Normal"),inventarp({}),bani(2000),victorii(0),popularitate(0){}
+Jucator::Jucator(std::string nume, const std::vector<std::shared_ptr<Animal>>& invent, const std::shared_ptr<StrategieSelect> &strat):
+id(++cont),nume(std::move(nume)),bani(2000),victorii(0),popularitate(0),strat(strat) {
     for (auto const& i : invent) {
         inventarp.push_back(i->clone());
     }
@@ -75,4 +75,47 @@ std::string Jucator::avantajPopular(const std::vector<std::shared_ptr<Animal>>& 
 
 int Jucator::getPop() const {
     return popularitate;
+}
+
+void Jucator::pregatire() const {
+    for (const auto &a : inventarp) {
+        a->antrenamentANTR();
+    }
+}
+
+std::shared_ptr<Animal> Jucator::alegePentru(const std::string &avantaj) const {
+    return strat->alege(this->inventarp, avantaj);
+}
+
+void Jucator::setStrategie(const std::shared_ptr<StrategieSelect>& stratNou) {
+    strat = stratNou;
+}
+
+std::istream& operator>>(std::istream& is, Jucator& jucator) {
+    is >> jucator.nume;
+    return is;
+}
+
+std::ostream& operator<<(std::ostream& os, const Jucator& jucator) {
+    os << "nume: " << jucator.nume << std::endl<<
+        "bani: "<<jucator.bani<<std::endl<<
+            "animale: "<<std::endl;
+    for (const auto& a: jucator.inventarp) {
+        std::cout<<*a<<std::endl;
+    }
+    os<<"victorii: "<<jucator.victorii<<std::endl<<
+        "popularitate: "<<jucator.popularitate <<std::endl;
+    return os;
+}
+
+std::string Jucator::getNume() const{
+    return nume;
+}
+
+int Jucator::getId() const {
+    return id;
+}
+
+std::shared_ptr<StrategieSelect> Jucator::getStrategie() const {
+    return strat;
 }

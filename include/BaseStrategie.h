@@ -9,26 +9,14 @@
 
 
 
-template<typename A>
-class BaseStrategie: public StrategieSelect<A> {
+class BaseStrategie: public StrategieSelect{
 public:
-    std::shared_ptr<A> alege(std::vector<std::shared_ptr<A>> &anims,Jucator &juc) const override;
+    [[nodiscard]] std::shared_ptr<Animal> alege(const std::vector<std::shared_ptr<Animal>> &anims,
+    const std::string &animal) const override;
 };
 
-template<typename A>
-std::shared_ptr<A> BaseStrategie<A>::alege(std::vector<std::shared_ptr<A>> &anims,Jucator &juc) const {
-    (void) juc;
-    auto best = anims.front();
-    int bestscor = best->calculeazaPerf();
-    for (const auto &a: anims) {
-        int scor = a->calculeazaPerf();
-        if (scor>bestscor) {
-            best = a;
-            bestscor = scor;
-        }
-    }
-    return best;
-}
+
+
 
 
 #endif //BASESTRATEGIE_H

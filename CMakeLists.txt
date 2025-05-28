@@ -137,8 +137,6 @@ add_executable(${MAIN_EXECUTABLE_NAME} main.cpp ${SOURCES}
         include/Cal.h
         src/Caine.cpp
         include/Caine.h
-        src/Oponent.cpp
-        include/Oponent.h
         src/Magazin.cpp
         include/Magazin.h
         src/Jucator.cpp

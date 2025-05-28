@@ -26,11 +26,13 @@ public:
     void odihna()override;
     bool operator<(const Caine& other) const;
     [[nodiscard]] std::shared_ptr<Animal> clone() const override;
+
     void antrenamentANTR() override;
 
     int actiuneSpeciala() override;
 
     [[nodiscard]] int getObstacole() const override;
+
     [[nodiscard]] int getSprint() const override;
 };
 

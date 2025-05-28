@@ -6,32 +6,18 @@
 #define STRATEGIECOUNTER_H
 
 #include "StrategieSelect.h"
-#include "BaseStrategie.h"
+#include "Animal.h"
 #include <map>
 
-template<typename A>
-class StrategieCounter: public StrategieSelect<A> {
+
+class StrategieCounter: public StrategieSelect {
     const std::map<std::string, std::string> bate = {{"agilitate", "viteza"},{"viteza", "control"},
         {"control","agilitate"}};
 public:
-    std::shared_ptr<A> alege(std::vector<std::shared_ptr<A>> &anims,Jucator &juc) const override;
+    [[nodiscard]] std::shared_ptr<Animal> alege(const std::vector<std::shared_ptr<Animal>> &anims,
+    const std::string &avantaj) const override;
 
 };
 
-template<typename A>
-std::shared_ptr<A> StrategieCounter<A>:: alege(std::vector<std::shared_ptr<A>> &anims, Jucator &juc) const {
-    const auto jucAnimale = juc.getAnimale();
-    const std::string avPop = Jucator::avantajPopular(jucAnimale);
-
-    std::string counter = bate.at(avPop);
-
-    for (const auto& a: anims) {
-        if (a->getAvantaj() == counter) {
-            return a;
-        }
-    }
-    return BaseStrategie<A> {}.alege(anims, juc);
-
-}
 
 #endif //STRATEGIECOUNTER_H

@@ -33,7 +33,6 @@ void Caine::antreneaza() {
 void Caine::odihna() {
     if (energie>80) {
         throw EnergieMulta();
-
     }
     energie+=20;
     std::cout<<"Cainele s-a odihnit. Energie actuala: "<<energie<<std::endl;

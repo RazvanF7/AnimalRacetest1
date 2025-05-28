@@ -10,7 +10,7 @@
 #include <memory>
 #include <algorithm>
 #include <unordered_map>
-
+#include <iostream>
 
 template<typename A>
 class Competitie {
@@ -46,6 +46,9 @@ public:
 template<typename A>
 std::vector<std::shared_ptr<A>> Competitie<A>::run() const {
     std::vector<std::shared_ptr<A>> rezultate = participanti;
+    for (const auto& p: participanti) {
+        std::cout<<*p;
+    }
 
     const int n = rezultate.size();
     std::unordered_map<int,int> scor;
