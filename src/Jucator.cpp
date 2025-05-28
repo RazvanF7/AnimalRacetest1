@@ -82,11 +82,11 @@ void Jucator::pregatire() const {
         a->antrenamentANTR();
     }
 }
-
+/*
 std::shared_ptr<Animal> Jucator::alegePentru(const std::string &avantaj) const {
     return strat->alege(this->inventarp, avantaj);
 }
-
+*/
 void Jucator::setStrategie(const std::shared_ptr<StrategieSelect>& stratNou) {
     strat = stratNou;
 }
@@ -108,7 +108,7 @@ std::ostream& operator<<(std::ostream& os, const Jucator& jucator) {
     return os;
 }
 
-std::string Jucator::getNume() const{
+const std::string& Jucator::getNume() const{
     return nume;
 }
 

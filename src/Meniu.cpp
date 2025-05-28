@@ -325,17 +325,17 @@ void Meniu::verificaCompetitii() {
     int recompensa = 400;
     int loc = 1;
 
-    for (auto& a : clasament) {
+    for (const auto& a : clasament) {
 
         Jucator* propr = nullptr;
-        for (auto& ap : jucatorOm.getAnimale()) {
+        for (const auto& ap : jucatorOm.getAnimale()) {
             if (ap->getId() == a->getId()) {
                 propr = &jucatorOm;
                 break;
             }
         }
         if (!propr) {
-            for (auto& op : oponenti) {
+            for (const auto& op : oponenti) {
                 for (auto& ao : op->getAnimale()) {
                     if (ao->getId() == a->getId()) {
                         propr = op.get();

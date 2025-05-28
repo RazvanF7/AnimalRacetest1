@@ -40,14 +40,14 @@ public:
 
     void pregatire() const;
 
-    [[nodiscard]] std::shared_ptr<Animal> alegePentru(const std::string &avantaj) const;
+    //[[nodiscard]] std::shared_ptr<Animal> alegePentru(const std::string &avantaj) const;
 
     void setStrategie(const std::shared_ptr<StrategieSelect> &stratNou);
 
     friend std::istream& operator>>(std::istream& is, Jucator& jucator);
 
     friend std::ostream& operator<<(std::ostream& os, const Jucator& jucator);
-    [[nodiscard]] std::string getNume() const;
+    [[nodiscard]] const std::string& getNume() const;
     [[nodiscard]] int getId() const;
     [[nodiscard]] std::shared_ptr<StrategieSelect> getStrategie() const;
 };
