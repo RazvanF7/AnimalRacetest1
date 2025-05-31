@@ -20,9 +20,11 @@ copiteCustom(copiteCustom),anduranta(anduranta),viteza(viteza),raritate(raritate
     }
 
 }
-/*void Cal::upgradeCopite() {
-    copiteCustom = true;
-}*/
+void Cal::upgradeCopite(const int bani) {
+    if (bani>=500)
+        copiteCustom = true;
+    else throw BaniInsuficienti();
+}
 void Cal::antreneaza() {
     if (energie<20) {
         throw EnergiePutina();
@@ -74,9 +76,6 @@ int Cal::extraPret() const {
     return pretloc;
 }
 
-bool Cal::operator<(const Cal& other) const {
-    return (viteza + anduranta) < (other.viteza + other.anduranta);
-}
 
 int Cal::extraPerf() const {
     int perf = 0;
@@ -129,4 +128,12 @@ int Cal::getObstacole() const {
 
 int Cal::getSprint() const {
     return viteza;
+}
+
+int Cal::costLevelUp() {
+    if (copiteCustom) {
+        return 120*nivel + viteza + anduranta + 300;
+    }
+    return 120*nivel + viteza + anduranta;
+
 }

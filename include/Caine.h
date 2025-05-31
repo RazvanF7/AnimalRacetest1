@@ -24,7 +24,6 @@ public:
     static bool eRasaValida(const std::string &rasa);
     void antreneaza() override;
     void odihna()override;
-    bool operator<(const Caine& other) const;
     [[nodiscard]] std::shared_ptr<Animal> clone() const override;
 
     void antrenamentANTR() override;
@@ -34,6 +33,8 @@ public:
     [[nodiscard]] int getObstacole() const override;
 
     [[nodiscard]] int getSprint() const override;
+
+    int costLevelUp() override;
 };
 
 

@@ -8,7 +8,6 @@
 #include <Animal.h>
 #include <Cal.h>
 #include <Caine.h>
-
 #include "BaseStrategie.h"
 #include "../include/CalFactory.h"
 #include "../include/CaineFactory.h"
@@ -20,7 +19,7 @@
 void Meniu::stop() {
     iesire = true;
 }
-bool Meniu::getIesire() const{
+bool Meniu::getIesire() const {
     return iesire;
 }
 
@@ -45,17 +44,44 @@ void Meniu::ruleaza() {
         int opt;
         std::cin >> opt;
         switch (opt) {
-            case 1: comandaAfisMagazin();  break;
-            case 2: comandaCumpara();      break;
-            case 3: comandaAfisJucator();  break;
-            case 4: comandaAntreneaza();   break;
-            case 5: comandaOdihna();       break;
-            case 6: comandaAfisOponenti(); break;
-            case 0: stop();         break;
+            case 1:
+                comandaAfisMagazin();
+                break;
+            case 2:
+                comandaCumpara();
+                break;
+            case 3:
+                comandaAfisJucator();
+                break;
+            case 4:
+                comandaAntreneaza();
+                break;
+            case 5:
+                comandaOdihna();
+                break;
+            case 6:
+                comandaAfisOponenti();
+                break;
+            case 7:
+                upgradeCal();
+                break;
+            case 8:
+                levelUp();
+                break;
+            case 9:
+                verificaCompetitii();
+                break;
+            case 10:
+                actiuneSpecialaCal();
+                break;
+            case 0:
+                stop();
+                break;
             default:
                 std::cout << "alege alta optiune\n";
         }
         if (!getIesire())
+            if (zi % 5 == 0)
             verificaCompetitii();
         if (!getIesire()) {
             std::cin.get();
@@ -65,10 +91,10 @@ void Meniu::ruleaza() {
 
 void Meniu::initOponenti() {
 
-    const std::shared_ptr<Animal> caine1 = std::make_shared<Caine>("Micah", "viteza",1, 90,100,"Ogar");
-    const std::shared_ptr<Animal> caine2 = std::make_shared<Caine>("Stinky", "control",2,90,110,"Dalmatian");
+    const std::shared_ptr<Animal> caine1 = std::make_shared<Caine>("Micah", "viteza",1, 82,80,"Ogar");
+    const std::shared_ptr<Animal> caine2 = std::make_shared<Caine>("Stinky", "control",2,83,75,"Dalmatian");
 
-    const std::shared_ptr<Animal> cal1   = std::make_shared<Cal>(false,"Arthur Morgan","control",1,100,45,"Normal");
+    const std::shared_ptr<Animal> cal1   = std::make_shared<Cal>(false,"Arthur Morgan","control",1,100,40,"Normal");
     const std::shared_ptr<Animal> cal2   = std::make_shared<Cal>(true,"Nicusor","viteza",2,80,55,"Epic");
 
     std::vector invOp1 {caine1,cal1};
@@ -81,15 +107,18 @@ void Meniu::initOponenti() {
     oponenti.push_back(std::make_shared<Jucator>("Dutch",invOp2,strat2));
 }
 void Meniu::afisOptiuni() {
-    std::cout
-              << "1. afiseaza magazin\n"
-              << "2. cumpara un animal\n"
-              << "3. inventar jucator\n"
-              << "4. antreneaza animal\n"
-              << "5. odihna\n"
-              << "6. afiseaza oponenti: \n"
-              << "0. stop\n"
-              << "alege optiunea: "<<std::endl;
+    std::cout<< "1. afiseaza magazin\n"
+    <<"2. cumpara un animal\n"
+    <<"3. inventar jucator\n"
+    <<"4. antreneaza animal\n"
+    <<"5. odihna\n"
+    <<"6. afiseaza oponenti: \n"
+    <<"7. upgradeaza cal\n"
+    <<"8. da levelup la un animal\n"
+    <<"9. intra intr o competitie mai devreme\n"
+    <<"10. trimite un cal la munca\n"
+    <<"0. stop\n"
+    <<"alege optiunea: "<<std::endl;
 }
 
 void Meniu::comandaAfisMagazin() {
@@ -136,7 +165,7 @@ void Meniu::comandaAntreneaza(){
                 a->antreneaza();
                 std::cout << "antrenament efectuat\n";
                 ++zi;
-            } catch (const std::exception& e) {
+            } catch (const EnergiePutina& e) {
                 std::cout << "eroare antrenamenrt: " << e.what() << "\n";
             }
             return;
@@ -155,8 +184,8 @@ void Meniu::comandaOdihna() const {
         if (a->getId() == id) {
             try {
                 a->odihna();
-            } catch (const std::exception& e) {
-                std::cout << "Eroare la odihna: " << e.what() << "\n";
+            } catch (const EnergieMulta& e) {
+                std::cout << "eroare la odihna: " << e.what() << "\n";
             }
             return;
         }
@@ -183,20 +212,19 @@ void Meniu::initCompetitii() {
 
 
 
-    competitii.push_back(make_shared<Obstacole<Animal>>("Obstacole Caini", v1, "RO", 5));
-    competitii.push_back(make_shared<Obstacole<Animal>>("Obstacole Cai", v2, "RO", 5));
-    competitii.push_back(make_shared<Sprint<Animal>>("Sprint Caini", v1, "RO", 100));
-    competitii.push_back(make_shared<Sprint<Animal>>("Sprint Cai", v2, "RO", 100));
+    competitii.push_back(make_shared<Obstacole<Animal>>("Obstacole Caini", v1, "Romania", 5));
+    competitii.push_back(make_shared<Obstacole<Animal>>("Obstacole Cai", v2, "Austria", 5));
+    competitii.push_back(make_shared<Sprint<Animal>>("Sprint Caini", v1, "Agartha", 100));
+    competitii.push_back(make_shared<Sprint<Animal>>("Sprint Cai", v2, "Germania", 100));
 }
 
 
 void Meniu::verificaCompetitii() {
- if (zi % 5 != 0) return;
-    std::vector<std::shared_ptr<Animal>> allowed;
+    std::vector<std::shared_ptr<Animal>> disponibil;
     std::shared_ptr<Competitie<Animal>> competitie;
     bool esteCompCaini = false;
     while (true) {
-        allowed.clear();
+        disponibil.clear();
         std::cout << "\n competitii disponibile (ziua " << zi << ") \n";
         for (size_t i = 0; i < competitii.size(); ++i) {
             std::cout << i + 1 << ". " << competitii[i]->getNumeComp() << "\n";
@@ -216,41 +244,43 @@ void Meniu::verificaCompetitii() {
 
         for (const auto& a : jucatorOm.getAnimale()) {
             if (esteCompCaini && dynamic_cast<Caine*>(a.get())) {
-                allowed.push_back(a);
+                disponibil.push_back(a);
             } else if (!esteCompCaini && dynamic_cast<Cal*>(a.get())) {
-                allowed.push_back(a);
+                disponibil.push_back(a);
             }
         }
 
-        if (allowed.empty()) {
+        if (disponibil.empty()) {
             std::cout << "nu ai niciun animal pentru aceasta competitie.\n";
             continue;
         }
 
         std::cout << "animalele tale pt " << competitie->getNumeComp() << ":\n";
-        for (const auto& a : allowed) {
-            std::cout << "  id " << a->getId() << " " << *a;
+        for (const auto& a : disponibil) {
+            std::cout << " id " << a->getId() << " " << *a;
         }
         break;
     }
-
-    int idAnimal;
-    std::cout << "alege ID-ul dintre cele de mai sus: ";
-    std::cin >> idAnimal;
-
     std::shared_ptr<Animal> ales;
-    for (const auto& a : allowed) {
-        if (a->getId() == idAnimal) {
-            ales = a;
-            (*a)++;
-            break;
-        }
-    }
-    if (!ales) {
-        std::cout << "id invalid pentru competitie\n";
-        return;
-    }
+    while (true) {
+        int idAnimal;
+        std::cout << "alege ID-ul dintre cele de mai sus: ";
+        std::cin >> idAnimal;
 
+
+        for (const auto& a : disponibil) {
+            if (a->getId() == idAnimal) {
+                ales = a;
+                (*a)++;
+                break;
+            }
+        }
+        if (!ales) {
+            std::cout << "id invalid pentru competitie\n";
+            continue;
+        }
+        break;
+    }
     jucatorOm.calcPop();
 
     int maxPop = jucatorOm.getPop();
@@ -269,17 +299,21 @@ void Meniu::verificaCompetitii() {
 
     for (const auto& op : oponenti) {
         if (op->getId() != tinta && op->getPop() > 20) {
-            std::cout << op->getNume() << " isi schimba strategia catre contra ";
+            std::cout << op->getNume() << " isi schimba strategia";
             op->setStrategie(std::make_shared<StrategieCounter>());
         }
     }
 
     std::vector<std::shared_ptr<Animal>> participanti;
-    participanti.push_back(ales);
+    int esteSigur;
+    std::cout<<"\n mai vrei sa participi ? (0-nu, 1-da)\n";
+    std::cin>> esteSigur;
+    if (esteSigur != 0)
+        participanti.push_back(ales);
 
     for (const auto& op : oponenti) {
         std::vector<std::shared_ptr<Animal>> cand;
-        for (auto& a : op->getAnimale()) {
+        for (const auto& a : op->getAnimale()) {
             if (esteCompCaini) {
                 if (dynamic_cast<Caine*>(a.get())) {
                     cand.push_back(a);
@@ -320,7 +354,6 @@ void Meniu::verificaCompetitii() {
     for (const auto& op: oponenti) {
         op->pregatire();
     }
-
     std::cout << "\n clasament final \n";
     int recompensa = 400;
     int loc = 1;
@@ -370,4 +403,79 @@ void Meniu::verificaCompetitii() {
     }
 
     std::cout << "\n competitia s a incheiat\n";
+}
+
+void Meniu::upgradeCal() {
+    int id;
+    std::cout << "\nalege id ul calului la care vrei sa dai upgrade:\n";
+    std::cin >> id;
+
+    for (const auto& a : jucatorOm.getAnimale()) {
+        if (a->getId() == id) {
+            Cal* calPtr = dynamic_cast<Cal*>(a.get());
+            if (calPtr) {
+                try {
+                    calPtr->upgradeCopite(jucatorOm.getBani());
+                    std::cout << "cal upgradat cu succes.\n";
+                    jucatorOm-=500;
+                } catch (const BaniInsuficienti& e) {
+                    std::cout << "eroare la upgrade: " << e.what() << "\n";
+                }
+                return;
+            } else {
+                std::cout << "animalul gasit nu este un cal\n";
+                return;
+            }
+        }
+    }
+
+    std::cout << "nu s a gasit cal cu id specificat\n";
+}
+
+
+void Meniu::levelUp() {
+    int id;
+    std::cout<< "\n alege id ul animalul la care sa dai levelup: \n";
+    std::cin>>id;
+    for (const auto& a : jucatorOm.getAnimale()) {
+        if (a->getId() == id) {
+            if (jucatorOm.getBani()>= a->costLevelUp()) {
+                ++(*a);
+                std::cout<< "\nanimalul a dat level up\n";
+                jucatorOm -= a->costLevelUp();
+                return;
+            }
+            else {
+                std::cout<< "\nnu ai suficienti bani\n";
+                return;
+            }
+        }
+    }
+
+}
+void Meniu::actiuneSpecialaCal() {
+    int id;
+    std::cout << "\nalege id ul calului pe care il trimiti la munca:\n";
+    std::cin >> id;
+    for (const auto& a : jucatorOm.getAnimale()) {
+        if (a->getId() == id) {
+            Cal* calPtr = dynamic_cast<Cal*>(a.get());
+            if (calPtr) {
+                try {
+                    int baniCastigati = calPtr->actiuneSpeciala();
+                    jucatorOm += baniCastigati;
+                    std::cout << "\ncalul a muncit si a castigat "
+                              << baniCastigati << " bani.\n";
+                } catch (const EnergiePutina& e) {
+                    std::cout << "nu are suficienta energie: " << e.what() << "\n";
+                }
+                return;
+            } else {
+                std::cout << "\nanimalul gasit nu este un cal.\n";
+                return;
+            }
+        }
+    }
+
+    std::cout << "\nnu s a gasit cal cu id ul specificat.\n";
 }

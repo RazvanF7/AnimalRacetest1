@@ -24,14 +24,13 @@ public:
     static bool eRaritateValida(const std::string &raritate);
     void antreneaza() override;
     void odihna()override;
-    /*void upgradeCopite();*/
+    void upgradeCopite(int bani);
     [[nodiscard]] std::shared_ptr<Animal> clone() const override;
-    bool operator<(const Cal& other) const;
     void antrenamentANTR() override;
     int actiuneSpeciala() override;
     [[nodiscard]] int getObstacole() const override;
     [[nodiscard]] int getSprint() const override;
-
+    int costLevelUp() override;
 };
 
 

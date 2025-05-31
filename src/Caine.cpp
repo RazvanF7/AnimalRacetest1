@@ -73,18 +73,14 @@ int Caine::extraPerf() const {
     return perf;
 }
 
-bool Caine::operator<(const Caine& other) const{
-    return (agilitate + loialitate) < (other.agilitate + other.loialitate);
-}
-
 
 std::shared_ptr<Animal> Caine::clone() const {
     return std::make_shared<Caine>(*this);
 }
 
 void Caine::antrenamentANTR() {
-    agilitate+=100;
-    loialitate+=100;
+    agilitate+=55;
+    loialitate+=55;
     nivel++;
 }
 
@@ -106,3 +102,10 @@ int Caine::getObstacole() const {
 int Caine::getSprint() const {
     return agilitate;
 }
+
+int Caine::costLevelUp() {
+    return 100*nivel + loialitate*2 + agilitate*2;
+}
+
+
+

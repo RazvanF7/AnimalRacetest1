@@ -28,6 +28,9 @@ class Meniu {
     void comandaAfisOponenti() const;
     void initCompetitii();
     void verificaCompetitii();
+    void upgradeCal();
+    void levelUp();
+    void actiuneSpecialaCal();
 public:
     void ruleaza();
 

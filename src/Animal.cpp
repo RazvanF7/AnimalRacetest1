@@ -64,6 +64,9 @@ std::istream& operator>>(std::istream& is, Animal& animal) {
     return is;
 }
 
+bool operator==(const Animal& a, const Animal& b) {
+    return a.getId() == b.getId();
+}
 
 Animal &Animal::operator++() {
         ++nivel;

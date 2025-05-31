@@ -18,7 +18,9 @@ class Animal {
 
 protected:
     int nivel;
-    virtual void afis(std::ostream&) const{}
+    virtual void afis(std::ostream&) const {
+
+    }
     [[nodiscard]] virtual int extraPret() const;
     int participari;
     int energie;
@@ -45,14 +47,9 @@ public:
 
     virtual void odihna();
 
-
-
     [[nodiscard]] virtual std::shared_ptr<Animal> clone() const = 0;
 
     Animal& operator++();
-
-
-    friend bool operator<(const Animal& a, const Animal& b);
 
     friend bool operator==(const Animal& a, const Animal& b);
 
@@ -68,8 +65,12 @@ public:
     [[nodiscard]] int getParticipari() const;
 
     [[nodiscard]] virtual int getObstacole() const = 0;
+
     [[nodiscard]] virtual int getSprint() const = 0;
+
     [[nodiscard]] const std::string& getNume() const;
+
+    virtual int costLevelUp() = 0;
 };
 
 
